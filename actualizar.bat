@@ -31,6 +31,6 @@ git push origin main
 echo.
 echo ========================================================
 echo ¡Proceso completado con exito!
-echo El tablero se actualizara en la web en 1 minuto.
+echo El tablero se actualizara en la web en unos instantes.
 echo ========================================================
 pause
