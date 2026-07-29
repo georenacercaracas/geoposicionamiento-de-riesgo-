@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEO RENACER CARACAS - Tablero de Control de Infraestructura y Geoposicionamiento de Riesgo</title>
+    <title>GEO RENACER CARACAS - Tablero de Control e Infraestructura</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,12 +27,13 @@
         .sheet-wrapper { position: relative; height: 550px; overflow: hidden; border-radius: 0.75rem; background: #fff; }
         .sheet-wrapper iframe { width: 100%; height: 100%; border: 0; }
         .chart-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .tab-btn.active { background-color: #800000; color: white; border-color: #800000; }
+        .tab-btn { transition: all 0.2s ease-in-out; }
+        .tab-btn.active { background-color: #800000 !important; color: white !important; border-color: #800000 !important; box-shadow: 0 4px 12px rgba(128, 0, 0, 0.25); }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- ENCABEZADO SUPERIOR -->
+    <!-- ENCABEZADO SUPERIOR FIJO -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -45,7 +46,7 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo
                 </span>
                 <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200 hidden md:inline">
-                    ACTUALIZADO: JULIO 2026
+                    ACTUALIZADO: 15 AL 24 DE JULIO DE 2026
                 </span>
             </div>
         </div>
@@ -66,23 +67,25 @@
         </div>
     </header>
 
-    <!-- BARRA DE BOTONES DE NAVEGACIÓN Y FILTROS -->
+    <!-- BARRA DE BOTONES Y FILTROS INTERACTIVOS -->
     <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-[57px] z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-center gap-2 md:gap-4">
-            <button onclick="cambiarModulo('renacer')" id="btn-renacer" class="tab-btn active px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold uppercase transition flex items-center gap-2 shadow-sm">
+            <button onclick="cambiarModulo('renacer')" id="btn-renacer" class="tab-btn active px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold uppercase flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-layer-group"></i> Renacer Completo
             </button>
-            <button onclick="cambiarModulo('1x10')" id="btn-1x10" class="tab-btn px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-50 uppercase transition flex items-center gap-2 shadow-sm">
+            <button onclick="cambiarModulo('1x10')" id="btn-1x10" class="tab-btn px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold text-gray-700 hover:bg-gray-50 uppercase flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-bullhorn"></i> 1x10 del Buen Gobierno
             </button>
-            <button onclick="cambiarModulo('habitable')" id="btn-habitable" class="tab-btn px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-50 uppercase transition flex items-center gap-2 shadow-sm">
+            <button onclick="cambiarModulo('habitable')" id="btn-habitable" class="tab-btn px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold text-gray-700 hover:bg-gray-50 uppercase flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-house-chimney-crack"></i> Caracas Habitable
             </button>
         </div>
     </nav>
 
-    <!-- SECCIÓN DE INDICADORES -->
+    <!-- SECCIÓN PRINCIPAL DE CONTENIDO -->
     <section id="modulo-contenido" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
+        
+        <!-- ENCABEZADO DINÁMICO DEL MÓDULO -->
         <div class="text-center space-y-2 border-b border-gray-200 pb-4">
             <div class="inline-flex items-center gap-2 text-dark-red font-bold text-xs uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">
                 <i class="fa-solid fa-hammer"></i> <span id="modulo-titulo-tag">Módulo General Renacer</span>
@@ -91,14 +94,15 @@
             <p id="modulo-subtitulo" class="text-xs font-bold text-gray-600 tracking-wider uppercase">REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS</p>
         </div>
 
+        <!-- TARJETA DE INDICADORES -->
         <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-6">
             <div class="text-center">
-                <h3 class="text-xl font-extrabold text-slate-900 uppercase">INFORME DE GESTIÓN Y AVANCE DE OBRAS: JULIO 2026</h3>
+                <h3 class="text-xl font-extrabold text-slate-900 uppercase">INFORME DE GESTIÓN Y AVANCE DE OBRAS: 15 AL 24 DE JULIO DE 2026</h3>
                 <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-0.5">MÉTRICAS CLAVE Y ESTADÍSTICAS DEL PROYECTO</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- MÉTRICAS SOCIALES -->
+                <!-- METRICAS SOCIALES -->
                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
                     <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-users text-dark-red"></i> IMPACTO SOCIAL / BENEFICIARIOS
@@ -115,7 +119,7 @@
                     </div>
                 </div>
 
-                <!-- MÉTRICAS INFRAESTRUCTURA -->
+                <!-- METRICAS INFRAESTRUCTURA -->
                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
                     <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-city text-dark-red"></i> INFRAESTRUCTURA EN INTERVENCIÓN
@@ -149,19 +153,19 @@
                 </div>
             </div>
 
-            <!-- GRÁFICA DE AVANCE GENERAL -->
+            <!-- GRÁFICA COMPLETA DEL TOTAL DE OBRAS -->
             <div class="pt-6 border-t border-gray-200 space-y-3">
                 <div class="text-center">
-                    <h4 class="text-base font-extrabold text-slate-900 uppercase">GRÁFICA ESTADO DE AVANCE FÍSICO EN OBRA</h4>
+                    <h4 class="text-base font-extrabold text-slate-900 uppercase">GRÁFICA ESTADO DE AVANCE FÍSICO EN OBRA (TOTAL OBRAS Y SECTORES)</h4>
                 </div>
                 <div class="chart-scroll-container bg-slate-50 p-4 rounded-xl border border-gray-200">
-                    <div style="min-width: 800px; height: 350px; position: relative;">
+                    <div style="min-width: 1100px; height: 380px; position: relative;">
                         <canvas id="chartAvanceGeneralObras"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- GRÁFICAS GENERALES ADICIONALES (ENTES Y ESTADO DE RIESGO) -->
+            <!-- GRÁFICAS ADICIONALES (ENTES Y RIESGO) -->
             <div class="pt-6 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
                     <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">DISTRIBUCIÓN POR ENTE EJECUTOR</h4>
@@ -170,7 +174,7 @@
                     </div>
                 </div>
                 <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
-                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">CLASIFICACIÓN DE RIESGO</h4>
+                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">CLASIFICACIÓN DE RIESGO ESTRUCTURAL</h4>
                     <div style="height: 250px; position: relative;">
                         <canvas id="chartEstadoRiesgo"></canvas>
                     </div>
@@ -178,11 +182,14 @@
             </div>
         </div>
 
-        <!-- MAPA GOOGLE MY MAPS -->
+        <!-- SECCIÓN DE MAPAS DINÁMICOS POR MÓDULO -->
         <div class="bg-white p-6 rounded-2xl border border-gray-200 card-shadow space-y-3">
-            <h3 class="text-sm font-extrabold text-slate-900 uppercase">MAPA GENERAL DE OBRAS Y TRABAJOS</h3>
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="mapa-titulo" class="text-sm font-extrabold text-slate-900 uppercase">MAPA GENERAL DE OBRAS Y TRABAJOS (RENACER COMPLETO)</h3>
+                <span class="text-xs font-bold text-dark-red uppercase"><i class="fa-solid fa-location-dot"></i> Geoposicionamiento Activo</span>
+            </div>
             <div class="map-wrapper shadow-inner border border-gray-300">
-                <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                <iframe id="iframe-mapa" src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
             </div>
         </div>
     </section>
@@ -205,26 +212,49 @@
         <p class="text-xs text-gray-400">GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
     </footer>
 
-    <!-- SCRIPT CONTROLADOR Y GRÁFICAS GENERALES -->
+    <!-- SCRIPT DE LOGICA DE GRÁFICAS Y NAVEGACIÓN -->
     <script>
         let chartAvance = null;
         let chartEntes = null;
         let chartRiesgo = null;
 
+        // Mapas asignados por módulo
+        const mapasURLs = {
+            'renacer': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F',
+            '1x10': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F',
+            'habitable': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F'
+        };
+
+        // Datos del total de obras
+        const totalObrasData = {
+            labels: [
+                "23 DE EL CRISTO", "23 DE EL LIBERTADOR", "ALTAGRACIA ESQUINA", "CARICUAO Gran Mazo", 
+                "CATEDRAL Av. BARALT", "COCHE La Rinconada", "EL JUNQUITO PUEBLO", "EL PARAISO LA PLANTA", 
+                "EL RECREO SABANA GRANDE", "EL VALLE Gran Mazo", "LA CANDELARIA BELLAS ARTES", "LA VEGA CARAPITA", 
+                "MACARAO EL MAMPOTE", "SAN AGUSTIN METROCABLE", "SAN AGUSTIN PASAJE", "SAN BERNARDINO", 
+                "SAN JOSE SAN LUIS", "SAN PEDRO LOS CHAGUARAMOS"
+            ],
+            valores: [15, 15, 34, 85, 47, 35, 12, 40, 25, 30, 45, 50, 20, 55, 60, 18, 22, 30]
+        };
+
         window.onload = function() {
-            renderizarGraficasGenerales();
+            renderizarTodasLasGraficas();
         };
 
         function cambiarModulo(tipo) {
-            // Actualizar estado de botones
+            // Actualizar clase de botones
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-red-800', 'text-white');
+                btn.classList.remove('active');
                 btn.classList.add('text-gray-700', 'hover:bg-gray-50');
             });
 
             const btnActivo = document.getElementById(`btn-${tipo}`);
-            if (btnActivo) {
-                btnActivo.classList.add('active');
+            if (btnActivo) btnActivo.classList.add('active');
+
+            // Actualizar iframe de mapa
+            const iframeMapa = document.getElementById('iframe-mapa');
+            if (iframeMapa && mapasURLs[tipo]) {
+                iframeMapa.src = mapasURLs[tipo];
             }
 
             // Cambiar textos según el botón presionado
@@ -232,37 +262,49 @@
                 document.getElementById('modulo-titulo-tag').innerText = "Módulo General Renacer";
                 document.getElementById('modulo-titulo-principal').innerText = "TRABAJOS ALCALDÍA DE CARACAS";
                 document.getElementById('modulo-subtitulo').innerText = "REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS";
+                document.getElementById('mapa-titulo').innerText = "MAPA GENERAL DE OBRAS Y TRABAJOS (RENACER COMPLETO)";
                 document.getElementById('indicador-total-obras').innerText = "42";
                 document.getElementById('indicador-multifamiliares').innerText = "30";
                 document.getElementById('indicador-unifamiliares').innerText = "6";
+                actualizarGraficaAvance(totalObrasData.labels, totalObrasData.valores);
             } else if (tipo === '1x10') {
                 document.getElementById('modulo-titulo-tag').innerText = "SISTEMA 1X10 DEL BUEN GOBIERNO";
                 document.getElementById('modulo-titulo-principal').innerText = "REPORTES Y SOLICITUDES DE COMUNIDADES";
                 document.getElementById('modulo-subtitulo').innerText = "MONITOREO DIRECTO DE CASOS Y SOLUCIONES COMUNITARIAS EN CARACAS";
+                document.getElementById('mapa-titulo').innerText = "MAPA DE REPORTE Y CASOS 1X10 DEL BUEN GOBIERNO";
                 document.getElementById('indicador-total-obras').innerText = "18";
                 document.getElementById('indicador-multifamiliares').innerText = "12";
                 document.getElementById('indicador-unifamiliares').innerText = "4";
+                actualizarGraficaAvance(
+                    ["23 DE JULIO 1X10", "CARICUAO 1X10", "COCHE 1X10", "LA VEGA 1X10", "EL VALLE 1X10", "MACARAO 1X10"], 
+                    [70, 85, 40, 60, 50, 30]
+                );
             } else if (tipo === 'habitable') {
                 document.getElementById('modulo-titulo-tag').innerText = "PROGRAMA CARACAS HABITABLE";
                 document.getElementById('modulo-titulo-principal').innerText = "MITIGACIÓN DE RIESGO Y VIVIENDA";
                 document.getElementById('modulo-subtitulo').innerText = "EVALUACIÓN DE ESTRUCTURAS, RESTRUCTURACIÓN URBANA Y PLANES DE ASISTENCIA";
+                document.getElementById('mapa-titulo').innerText = "MAPA DE EVALUACIÓN Y RIESGO URBANO (CARACAS HABITABLE)";
                 document.getElementById('indicador-total-obras').innerText = "24";
                 document.getElementById('indicador-multifamiliares').innerText = "18";
                 document.getElementById('indicador-unifamiliares').innerText = "2";
+                actualizarGraficaAvance(
+                    ["SAN AGUSTIN HABITABLE", "ALTAGRACIA HABITABLE", "LA CANDELARIA HABITABLE", "SAN JOSE HABITABLE"], 
+                    [45, 65, 80, 50]
+                );
             }
         }
 
-        function renderizarGraficasGenerales() {
+        function renderizarTodasLasGraficas() {
             // 1. Gráfica Bar Avance
             const ctxA = document.getElementById("chartAvanceGeneralObras");
             if (ctxA) {
                 chartAvance = new Chart(ctxA, {
                     type: 'bar',
                     data: {
-                        labels: ["23 DE EL CRISTO", "23 DE EL LIBERTADOR", "ALTAGRACIA ESQUINA", "CARICUAO Gran Mazo", "CATEDRAL Av. BARALT", "COCHE La Rinconada", "LA CANDELARIA BELLAS ARTES", "SAN AGUSTIN METROCABLE"],
+                        labels: totalObrasData.labels,
                         datasets: [{
                             label: '% Avance Físico',
-                            data: [15, 15, 34, 85, 47, 35, 45, 55],
+                            data: totalObrasData.valores,
                             backgroundColor: '#800000',
                             borderRadius: 4
                         }]
@@ -309,6 +351,14 @@
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
+            }
+        }
+
+        function actualizarGraficaAvance(labels, data) {
+            if (chartAvance) {
+                chartAvance.data.labels = labels;
+                chartAvance.data.datasets[0].data = data;
+                chartAvance.update();
             }
         }
     </script>
