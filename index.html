@@ -9,8 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- PapaParse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -19,294 +17,479 @@
     <style>
         body { font-family: 'Roboto', sans-serif; }
         h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
-        .card-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
         .text-dark-red { color: #800000; }
         .bg-dark-red { background-color: #800000; }
-        .map-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.75rem; }
-        .map-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .sheet-wrapper { position: relative; height: 550px; overflow: hidden; border-radius: 0.75rem; background: #fff; }
-        .sheet-wrapper iframe { width: 100%; height: 100%; border: 0; }
-        .chart-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .tab-btn { transition: all 0.2s ease-in-out; }
-        .tab-btn.active { background-color: #800000 !important; color: white !important; border-color: #800000 !important; box-shadow: 0 4px 12px rgba(128, 0, 0, 0.25); }
+        
+        /* Modulo de mapas autoajustables */
+        .map-container { position: relative; width: 100%; height: 480px; border-radius: 0.75rem; overflow: hidden; }
+        .map-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        /* Contenedor de la gráfica con desplazamiento si es muy ancha */
+        .chart-scroll { width: 100%; overflow-x: auto; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-slate-100 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- ENCABEZADO SUPERIOR FIJO -->
+    <!-- BARRA SUPERIOR FIJA DE NAVEGACIÓN -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="text-xl font-black tracking-tighter text-slate-900 border-l-4 border-red-800 pl-3">
-                    <span class="text-dark-red">GEO</span> RENACER
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo
+                <span class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+                    <span class="text-dark-red">CARACAS</span> <span class="text-xs font-bold text-gray-500 ml-1">GEO RENACER</span>
                 </span>
-                <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200 hidden md:inline">
-                    ACTUALIZADO: 15 AL 24 DE JULIO DE 2026
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span> Sistema Activo
+                </span>
+                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full border border-gray-200 hidden sm:inline">
+                    ACTUALIZADO: JULIO 2026
                 </span>
             </div>
         </div>
     </header>
 
-    <!-- BANNER HERO PRINCIPAL -->
-    <header class="relative bg-slate-950 text-white overflow-hidden shadow-2xl py-10 md:py-14">
-        <div class="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center text-center space-y-3">
-            <span class="text-xs md:text-sm font-semibold tracking-widest text-cyan-300 uppercase bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
-                <i class="fa-solid fa-mountain-sun mr-1.5"></i> Sistema de Monitoreo Urbano
-            </span>
-            <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white">
+    <!-- BANNER CON FONDO PAISAJE DE CARACAS -->
+    <div class="relative bg-slate-900 text-white py-12 md:py-16 bg-cover bg-center" style="background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1583200424558-84224c6d66e7?q=80&w=1200&auto=format&fit=crop');">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <div class="inline-flex items-center gap-2 bg-slate-800/80 px-4 py-1.5 rounded-full border border-slate-700 text-xs font-bold text-cyan-400">
+                <i class="fa-solid fa-mountain"></i> SISTEMA DE MONITOREO URBANO
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">
                 GEO RENACER CARACAS
             </h1>
-            <p class="text-xs md:text-sm tracking-widest uppercase text-gray-200 font-bold">
+            <p class="text-xs md:text-sm font-semibold text-gray-300 tracking-widest uppercase max-w-2xl mx-auto">
                 TABLERO DE CONTROL DE INFRAESTRUCTURA Y GEOPOSICIONAMIENTO DE RIESGO
             </p>
         </div>
-    </header>
+    </div>
 
-    <!-- BARRA DE BOTONES Y FILTROS INTERACTIVOS -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-[57px] z-40">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-center gap-2 md:gap-4">
-            <button onclick="cambiarModulo('renacer')" id="btn-renacer" class="tab-btn active px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold uppercase flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-layer-group"></i> Renacer Completo
+    <!-- TARJETAS DE NAVEGACIÓN PRINCIPALES (BOTONES SUPERIORES AUTOAJUSTABLES) -->
+    <nav class="max-w-7xl mx-auto px-4 -mt-8 relative z-20 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Botón 1: Renacer -->
+            <button onclick="scrollASeccion('seccion-renacer')" class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow text-center hover:border-red-800 transition duration-200 group">
+                <div class="w-10 h-10 mx-auto bg-red-50 text-dark-red rounded-xl flex items-center justify-center mb-2 group-hover:bg-red-800 group-hover:text-white transition">
+                    <i class="fa-solid fa-helmet-safety text-lg"></i>
+                </div>
+                <h3 class="font-extrabold text-slate-900 group-hover:text-dark-red text-base">RENACER</h3>
+                <p class="text-[11px] text-gray-500 mt-1">Obras en Ejecución y Trabajos Alcaldía de Caracas con Ubicación Geográfica</p>
             </button>
-            <button onclick="cambiarModulo('1x10')" id="btn-1x10" class="tab-btn px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold text-gray-700 hover:bg-gray-50 uppercase flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-bullhorn"></i> 1x10 del Buen Gobierno
+
+            <!-- Botón 2: Habitable -->
+            <button onclick="scrollASeccion('seccion-habitable')" class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow text-center hover:border-red-800 transition duration-200 group">
+                <div class="w-10 h-10 mx-auto bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center mb-2 group-hover:bg-amber-600 group-hover:text-white transition">
+                    <i class="fa-solid fa-house-chimney-crack text-lg"></i>
+                </div>
+                <h3 class="font-extrabold text-slate-900 group-hover:text-dark-red text-base">HABITABLE</h3>
+                <p class="text-[11px] text-gray-500 mt-1">Inspecciones de Habitabilidad tras Sismos e Indicadores de Servicios</p>
             </button>
-            <button onclick="cambiarModulo('habitable')" id="btn-habitable" class="tab-btn px-4 py-2.5 rounded-xl border border-gray-300 text-xs font-extrabold text-gray-700 hover:bg-gray-50 uppercase flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-house-chimney-crack"></i> Caracas Habitable
+
+            <!-- Botón 3: 1x10 -->
+            <button onclick="scrollASeccion('seccion-1x10')" class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow text-center hover:border-red-800 transition duration-200 group">
+                <div class="w-10 h-10 mx-auto bg-blue-50 text-blue-700 rounded-xl flex items-center justify-center mb-2 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <i class="fa-solid fa-clipboard-list text-lg"></i>
+                </div>
+                <h3 class="font-extrabold text-slate-900 group-hover:text-dark-red text-base">1 X 10</h3>
+                <p class="text-[11px] text-gray-500 mt-1">Solicitudes de Inspección Técnica y Reportes Problemas de Habitabilidad</p>
             </button>
+
         </div>
     </nav>
 
-    <!-- SECCIÓN PRINCIPAL DE CONTENIDO -->
-    <section id="modulo-contenido" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
-        
-        <!-- ENCABEZADO DINÁMICO DEL MÓDULO -->
-        <div class="text-center space-y-2 border-b border-gray-200 pb-4">
-            <div class="inline-flex items-center gap-2 text-dark-red font-bold text-xs uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">
-                <i class="fa-solid fa-hammer"></i> <span id="modulo-titulo-tag">Módulo General Renacer</span>
-            </div>
-            <h2 id="modulo-titulo-principal" class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">TRABAJOS ALCALDÍA DE CARACAS</h2>
-            <p id="modulo-subtitulo" class="text-xs font-bold text-gray-600 tracking-wider uppercase">REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS</p>
-        </div>
+    <!-- CONTENIDO GENERAL -->
+    <main class="max-w-7xl mx-auto px-4 py-10 space-y-12 w-full">
 
-        <!-- TARJETA DE INDICADORES -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-6">
-            <div class="text-center">
-                <h3 class="text-xl font-extrabold text-slate-900 uppercase">INFORME DE GESTIÓN Y AVANCE DE OBRAS: 15 AL 24 DE JULIO DE 2026</h3>
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-0.5">MÉTRICAS CLAVE Y ESTADÍSTICAS DEL PROYECTO</p>
+        <!-- ================= MÓDULO 1: RENACER (TRABAJOS Y AVANCE) ================= -->
+        <section id="seccion-renacer" class="space-y-6">
+            <div class="text-center space-y-1 border-b border-gray-200 pb-4">
+                <span class="text-xs font-bold text-dark-red tracking-widest uppercase"><i class="fa-solid fa-wrench"></i> MÓDULO DE OBRAS</span>
+                <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">TRABAJOS ALCALDÍA DE CARACAS</h2>
+                <p class="text-xs font-bold text-gray-500 uppercase">REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- METRICAS SOCIALES -->
-                <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
-                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-users text-dark-red"></i> IMPACTO SOCIAL / BENEFICIARIOS
-                    </h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-white p-4 rounded-xl border border-gray-200 text-center shadow-sm">
-                            <span class="text-xs font-bold text-slate-500 uppercase block">FAMILIAS ATENDIDAS</span>
-                            <span id="indicador-familias" class="text-3xl font-black text-slate-900 block mt-1">1,365</span>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200 text-center shadow-sm">
-                            <span class="text-xs font-bold text-slate-500 uppercase block">ALUMNOS BENEFICIADOS</span>
-                            <span id="indicador-alumnos" class="text-3xl font-black text-slate-900 block mt-1">1,000</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- METRICAS INFRAESTRUCTURA -->
-                <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
-                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-city text-dark-red"></i> INFRAESTRUCTURA EN INTERVENCIÓN
-                    </h4>
-                    <div class="text-center mb-2">
-                        <span class="text-xs font-bold text-slate-500 uppercase">TOTAL DE OBRAS EN EJECUCIÓN:</span>
-                        <span id="indicador-total-obras" class="text-2xl font-black text-dark-red ml-2">42</span>
-                    </div>
-                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center text-xs">
-                        <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                            <span id="indicador-multifamiliares" class="font-extrabold text-slate-900 block text-base">30</span>
-                            <span class="text-[9px] text-gray-500 block">MULTIFAMILIARES</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                            <span id="indicador-unifamiliares" class="font-extrabold text-slate-900 block text-base">6</span>
-                            <span class="text-[9px] text-gray-500 block">UNIFAMILIARES</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                            <span id="indicador-educativos" class="font-extrabold text-slate-900 block text-base">1</span>
-                            <span class="text-[9px] text-gray-500 block">EDUCATIVOS</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                            <span id="indicador-torredavid" class="font-extrabold text-slate-900 block text-base">1</span>
-                            <span class="text-[9px] text-gray-500 block">TORRE DAVID</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                            <span id="indicador-campamentos" class="font-extrabold text-slate-900 block text-base">4</span>
-                            <span class="text-[9px] text-gray-500 block">CAMPAMENTOS</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GRÁFICA COMPLETA DEL TOTAL DE OBRAS -->
-            <div class="pt-6 border-t border-gray-200 space-y-3">
+            <!-- INFORME DE GESTIÓN (METRICAS E IMPACTO SOCIAL) -->
+            <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-6">
                 <div class="text-center">
-                    <h4 class="text-base font-extrabold text-slate-900 uppercase">GRÁFICA ESTADO DE AVANCE FÍSICO EN OBRA (TOTAL OBRAS Y SECTORES)</h4>
+                    <h3 class="text-lg font-black text-slate-900 uppercase">INFORME DE GESTIÓN Y AVANCE DE OBRAS: JULIO 2026</h3>
+                    <p class="text-xs font-bold text-gray-400 uppercase">MÉTRICAS CLAVE Y ESTADÍSTICAS DEL PROYECTO</p>
                 </div>
-                <div class="chart-scroll-container bg-slate-50 p-4 rounded-xl border border-gray-200">
-                    <div style="min-width: 1100px; height: 380px; position: relative;">
-                        <canvas id="chartAvanceGeneralObras"></canvas>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- IMPACTO SOCIAL -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-gray-200">
+                        <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 mb-4">
+                            <i class="fa-solid fa-users text-dark-red"></i> IMPACTO SOCIAL / BENEFICIARIOS
+                        </h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-gray-200 text-center shadow-sm">
+                                <span class="text-[11px] font-bold text-gray-500 uppercase block">FAMILIAS ATENDIDAS</span>
+                                <span class="text-2xl md:text-3xl font-black text-slate-900 block mt-1">1,365</span>
+                                <span class="text-[9px] text-gray-400 block mt-1">Grupos familiares beneficiados directos o indirectos</span>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-gray-200 text-center shadow-sm">
+                                <span class="text-[11px] font-bold text-gray-500 uppercase block">ALUMNOS BENEFICIADOS</span>
+                                <span class="text-2xl md:text-3xl font-black text-slate-900 block mt-1">1,000</span>
+                                <span class="text-[9px] text-gray-400 block mt-1">Matrícula escolar afectada y atendida</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INFRAESTRUCTURA -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-gray-200">
+                        <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 mb-3">
+                            <i class="fa-solid fa-building text-dark-red"></i> INFRAESTRUCTURA EN INTERVENCIÓN
+                        </h4>
+                        <div class="text-center mb-3">
+                            <span class="text-xs font-bold text-gray-600 uppercase">TOTAL DE OBRAS EN EJECUCIÓN:</span>
+                            <span class="text-2xl font-black text-dark-red ml-2">42</span>
+                        </div>
+                        <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
+                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                                <span class="font-black text-slate-900 text-base block">30</span>
+                                <span class="text-[8px] font-bold text-gray-500 block">MULTIFAMILIARES</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                                <span class="font-black text-slate-900 text-base block">6</span>
+                                <span class="text-[8px] font-bold text-gray-500 block">UNIFAMILIARES</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                                <span class="font-black text-slate-900 text-base block">1</span>
+                                <span class="text-[8px] font-bold text-gray-500 block">EDUCATIVOS</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                                <span class="font-black text-slate-900 text-base block">1</span>
+                                <span class="text-[8px] font-bold text-gray-500 block">TORRE DAVID</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                                <span class="font-black text-slate-900 text-base block">4</span>
+                                <span class="text-[8px] font-bold text-gray-500 block">CAMPAMENTOS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRÁFICA COMPLETA DE AVANCE -->
+                <div class="pt-4 border-t border-gray-200 space-y-2">
+                    <div class="text-center">
+                        <h4 class="text-sm font-black text-slate-900 uppercase">GRÁFICA ESTADO DE AVANCE FÍSICO EN OBRA</h4>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">PORCENTAJE DE EJECUCIÓN POR PROYECTO / EDIFICACIÓN (DESLIZA HORIZONTALMENTE)</p>
+                    </div>
+                    <div class="chart-scroll bg-slate-50 p-4 rounded-xl border border-gray-200">
+                        <div style="min-width: 1200px; height: 350px;">
+                            <canvas id="chartAvanceCompleto"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRÁFICAS SECUNDARIAS (ENTES Y RIESGO) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center">
+                        <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider mb-2">DISTRIBUCIÓN DE OBRAS POR ENTE EJECUTOR</h4>
+                        <div style="height: 240px;" class="relative">
+                            <canvas id="chartEntes"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center">
+                        <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider mb-2">ESTADO DE RIESGO DE LAS OBRAS</h4>
+                        <div style="height: 240px;" class="relative">
+                            <canvas id="chartRiesgo"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- GRÁFICAS ADICIONALES (ENTES Y RIESGO) -->
-            <div class="pt-6 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
-                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">DISTRIBUCIÓN POR ENTE EJECUTOR</h4>
-                    <div style="height: 250px; position: relative;">
-                        <canvas id="chartEntesEjecutores"></canvas>
+            <!-- MAPA DE OBRAS DE RENACER -->
+            <div class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow space-y-3">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 uppercase">MAPA GENERAL DE OBRAS Y TRABAJOS</h3>
+                        <p class="text-[10px] text-gray-500">Ubicación geográfica de los trabajos y ficha técnica</p>
                     </div>
+                    <span class="text-xs font-bold text-dark-red bg-red-50 px-3 py-1 rounded-full border border-red-200">Sección Renacer</span>
                 </div>
-                <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
-                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">CLASIFICACIÓN DE RIESGO ESTRUCTURAL</h4>
-                    <div style="height: 250px; position: relative;">
-                        <canvas id="chartEstadoRiesgo"></canvas>
-                    </div>
+                <div class="map-container border border-gray-200 shadow-inner">
+                    <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- SECCIÓN DE MAPAS DINÁMICOS POR MÓDULO -->
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 card-shadow space-y-3">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="mapa-titulo" class="text-sm font-extrabold text-slate-900 uppercase">MAPA GENERAL DE OBRAS Y TRABAJOS (RENACER COMPLETO)</h3>
-                <span class="text-xs font-bold text-dark-red uppercase"><i class="fa-solid fa-location-dot"></i> Geoposicionamiento Activo</span>
+
+        <!-- ================= MÓDULO 2: HABITABLE (MÓDULO SÍSMICO) ================= -->
+        <section id="seccion-habitable" class="space-y-6 pt-6">
+            <div class="text-center space-y-1 border-b border-gray-200 pb-4">
+                <span class="text-xs font-bold text-amber-700 tracking-widest uppercase"><i class="fa-solid fa-house-chimney-crack"></i> MÓDULO SÍSMICO</span>
+                <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">HABITABLE</h2>
+                <p class="text-xs font-bold text-gray-500 uppercase">INSPECCIONES DE HABITABILIDAD TRAS LOS SISMOS</p>
             </div>
-            <div class="map-wrapper shadow-inner border border-gray-300">
-                <iframe id="iframe-mapa" src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+
+            <!-- RESUMEN SÍSMICO Y SERVICIOS -->
+            <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- GRÁFICA CIRCULAR DE INMUEBLES -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center flex flex-col justify-between">
+                    <div>
+                        <span class="text-3xl font-black text-slate-900 block">6,121</span>
+                        <span class="text-xs font-bold text-gray-600 uppercase block">TOTAL DE INMUEBLES INSPECCIONADOS</span>
+                        <span class="text-[10px] text-gray-400 block">Municipio Libertador</span>
+                    </div>
+                    <div style="height: 220px;" class="relative my-2">
+                        <canvas id="chartSismico"></canvas>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1 text-[9px] font-extrabold text-center border-t pt-2">
+                        <span class="bg-emerald-100 text-emerald-800 p-1 rounded">56.6% Verde</span>
+                        <span class="bg-amber-100 text-amber-800 p-1 rounded">20.7% Amarillo</span>
+                        <span class="bg-red-100 text-red-800 p-1 rounded">18.8% Rojo</span>
+                        <span class="bg-gray-100 text-gray-700 p-1 rounded">3.9% Sin Clasif.</span>
+                    </div>
+                </div>
+
+                <!-- TABLA DE SERVICIOS BÁSICOS -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 space-y-3">
+                    <div class="border-b pb-2">
+                        <h4 class="text-xs font-black uppercase text-slate-800">ESTADO DE SERVICIOS BÁSICOS</h4>
+                        <p class="text-[10px] text-gray-500 uppercase">RESUMEN DE OPERATIVIDAD DE SERVICIOS (TOTAL REGISTROS: 6,121)</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900 text-white text-[10px] uppercase">
+                                <tr>
+                                    <th class="p-2">SERVICIO</th>
+                                    <th class="p-2">OPERATIVOS</th>
+                                    <th class="p-2">TOTAL REGISTROS</th>
+                                    <th class="p-2 text-right">% TOTAL GENERAL</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 font-medium">
+                                <tr>
+                                    <td class="p-2 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-500"></i> Electricidad</td>
+                                    <td class="p-2">4,574</td>
+                                    <td class="p-2">6,121</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">74.73%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 flex items-center gap-1.5"><i class="fa-solid fa-droplet text-blue-500"></i> Agua</td>
+                                    <td class="p-2">4,287</td>
+                                    <td class="p-2">6,121</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">70.04%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 flex items-center gap-1.5"><i class="fa-solid fa-fire text-orange-500"></i> Gas</td>
+                                    <td class="p-2">3,911</td>
+                                    <td class="p-2">6,121</td>
+                                    <td class="p-2 text-right font-bold text-amber-600">63.89%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 flex items-center gap-1.5"><i class="fa-solid fa-phone text-indigo-500"></i> CANTV / Telefonía</td>
+                                    <td class="p-2">3,418</td>
+                                    <td class="p-2">6,121</td>
+                                    <td class="p-2 text-right font-bold text-amber-600">55.84%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <!-- SECCIÓN: MATRIZ CONSOLIDADA DE DATOS -->
-    <section id="matriz-datos" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-6">
-        <div class="text-center space-y-2 border-b border-gray-200 pb-4">
-            <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">MATRIZ CONSOLIDADA DE DATOS</h2>
-            <p class="text-xs font-bold text-gray-600 tracking-wider uppercase">PANEL DE DECISIONES, PRIORIDADES Y MÉTRICAS DE GESTIÓN</p>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-4">
-            <div class="sheet-wrapper shadow-inner border border-gray-300">
-                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQtz-qHEgDnJ0lIASQgWYAP--v856MzYzzk6cCwHUCRj3OaX92kmeJR_55BPyvFBA/pubhtml?widget=true&amp;headers=false"></iframe>
+            <!-- MAPAS DE CLASIFICACIÓN DE RIESGO SÍSMICO -->
+            <div class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow space-y-4">
+                <h3 class="text-center text-sm font-extrabold text-slate-900 uppercase border-b pb-2">MAPAS DE CLASIFICACIÓN DE RIESGO SÍSMICO</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Mapa Verde -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-300">
+                            <i class="fa-solid fa-circle-check"></i> Mapa Verde (Habitable)
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                    <!-- Mapa Amarillo -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg border border-amber-300">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Mapa Amarillo (Restringido)
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                    <!-- Mapa Rojo -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-lg border border-red-300">
+                            <i class="fa-solid fa-ban"></i> Mapa Rojo (Inhabitable)
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="bg-slate-900 text-white mt-auto py-8 text-center">
-        <p class="text-xs text-gray-400">GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
+
+        <!-- ================= MÓDULO 3: 1X10 (REPORTES Y COMUNIDADES) ================= -->
+        <section id="seccion-1x10" class="space-y-6 pt-6">
+            <div class="text-center space-y-1 border-b border-gray-200 pb-4">
+                <span class="text-xs font-bold text-blue-700 tracking-widest uppercase"><i class="fa-solid fa-bullhorn"></i> COMUNIDADES</span>
+                <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">1 X 10</h2>
+                <p class="text-xs font-bold text-gray-500 uppercase">SOLICITUDES DE INSPECCIÓN TÉCNICA O REPORTES PROBLEMAS DE HABITABILIDAD</p>
+            </div>
+
+            <!-- METRICAS 1X10 Y TOP PARROQUIAS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Total Reportes -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 card-shadow text-center flex flex-col justify-center space-y-3">
+                    <span class="text-4xl font-black text-dark-red block">9,081</span>
+                    <span class="text-xs font-bold text-gray-600 uppercase block border-b pb-2">REPORTES CRÍTICOS TOTALES</span>
+                    <div class="space-y-2 text-xs font-bold text-left pt-2">
+                        <div class="flex justify-between p-2 bg-red-50 rounded-lg border border-red-100">
+                            <span class="text-red-900"><i class="fa-solid fa-house-crack text-red-600 mr-1"></i> Daño Estruct. Grave</span>
+                            <span class="text-red-700">5,291</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-amber-50 rounded-lg border border-amber-100">
+                            <span class="text-amber-900"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Riesgo Colapso</span>
+                            <span class="text-amber-700">1,838</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-rose-50 rounded-lg border border-rose-100">
+                            <span class="text-rose-900"><i class="fa-solid fa-burst text-rose-600 mr-1"></i> Viviendas Colapsadas</span>
+                            <span class="text-rose-700">917</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 10 Parroquias Afectadas -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-200 card-shadow space-y-3">
+                    <h4 class="text-xs font-black uppercase text-slate-800 border-b pb-2 text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-ol text-dark-red"></i> TOP 10 PARROQUIAS AFECTADAS
+                    </h4>
+                    <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-xs font-semibold">
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>Parroquia Sucre (Catia)</span>
+                            <span class="font-black text-dark-red">1,910</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>San Juan</span>
+                            <span class="font-black text-slate-800">688</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>La Pastora</span>
+                            <span class="font-black text-slate-800">550</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>Antímano</span>
+                            <span class="font-black text-slate-800">580</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>La Candelaria</span>
+                            <span class="font-black text-slate-800">376</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>San José</span>
+                            <span class="font-black text-slate-800">214</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>La Vega</span>
+                            <span class="font-black text-slate-800">197</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>San Agustín</span>
+                            <span class="font-black text-slate-800">163</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>Santa Rosalía</span>
+                            <span class="font-black text-slate-800">118</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded border border-gray-200">
+                            <span>El Valle</span>
+                            <span class="font-black text-slate-800">105</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAPAS ESPECÍFICOS DEL 1X10 (TRES MAPAS EN PARALELO) -->
+            <div class="bg-white p-5 rounded-2xl border border-gray-200 card-shadow space-y-4">
+                <h3 class="text-center text-sm font-extrabold text-slate-900 uppercase border-b pb-2">MAPAS DE REPORTES Y SOLICITUDES 1X10</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Mapa 1x10 Daño Estructural -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-red-100 text-red-900 text-xs font-bold rounded-lg border border-red-300">
+                            1X10 Daño Estructural Grave
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                    <!-- Mapa 1x10 Riesgo Colapso -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-lg border border-amber-300">
+                            1X10 Edificio Riesgo Colapso
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                    <!-- Mapa 1x10 Vivienda Colapsada -->
+                    <div class="space-y-2">
+                        <span class="inline-block w-full text-center px-3 py-1 bg-rose-100 text-rose-900 text-xs font-bold rounded-lg border border-rose-300">
+                            1X10 Vivienda Colapsada
+                        </span>
+                        <div class="map-container h-80 border border-gray-200 shadow-inner">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= MATRIZ CONSOLIDADA DE DATOS ================= -->
+        <section class="space-y-4 pt-6">
+            <div class="text-center space-y-1 border-b border-gray-200 pb-3">
+                <h2 class="text-2xl font-black text-dark-red tracking-tight uppercase">MATRIZ CONSOLIDADA DE DATOS</h2>
+                <p class="text-xs font-bold text-gray-500 uppercase">MATRIZ MAESTRA OCASIONES Y TRAZABILIDAD - PANEL DE DECISIONES Y PRIORIDADES</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-gray-200 card-shadow">
+                <div class="w-full h-[500px] border border-gray-300 rounded-xl overflow-hidden shadow-inner">
+                    <iframe class="w-full h-full border-0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQtz-qHEgDnJ0lIASQgWYAP--v856MzYzzk6cCwHUCRj3OaX92kmeJR_55BPyvFBA/pubhtml?widget=true&amp;headers=false"></iframe>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white mt-auto py-8 text-center text-xs text-gray-400">
+        <p>GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
     </footer>
 
-    <!-- SCRIPT DE LOGICA DE GRÁFICAS Y NAVEGACIÓN -->
+    <!-- LOGICA DE GRÁFICAS -->
     <script>
-        let chartAvance = null;
-        let chartEntes = null;
-        let chartRiesgo = null;
-
-        // Mapas asignados por módulo
-        const mapasURLs = {
-            'renacer': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F',
-            '1x10': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F',
-            'habitable': 'https://www.google.com/maps/d/embed?mid=1nIyHZ-2BoN2ZLmz1zUQCr7KIDMI-7tI&ehbc=2E312F'
-        };
-
-        // Datos del total de obras
-        const totalObrasData = {
-            labels: [
-                "23 DE EL CRISTO", "23 DE EL LIBERTADOR", "ALTAGRACIA ESQUINA", "CARICUAO Gran Mazo", 
-                "CATEDRAL Av. BARALT", "COCHE La Rinconada", "EL JUNQUITO PUEBLO", "EL PARAISO LA PLANTA", 
-                "EL RECREO SABANA GRANDE", "EL VALLE Gran Mazo", "LA CANDELARIA BELLAS ARTES", "LA VEGA CARAPITA", 
-                "MACARAO EL MAMPOTE", "SAN AGUSTIN METROCABLE", "SAN AGUSTIN PASAJE", "SAN BERNARDINO", 
-                "SAN JOSE SAN LUIS", "SAN PEDRO LOS CHAGUARAMOS"
-            ],
-            valores: [15, 15, 34, 85, 47, 35, 12, 40, 25, 30, 45, 50, 20, 55, 60, 18, 22, 30]
-        };
-
-        window.onload = function() {
-            renderizarTodasLasGraficas();
-        };
-
-        function cambiarModulo(tipo) {
-            // Actualizar clase de botones
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('text-gray-700', 'hover:bg-gray-50');
-            });
-
-            const btnActivo = document.getElementById(`btn-${tipo}`);
-            if (btnActivo) btnActivo.classList.add('active');
-
-            // Actualizar iframe de mapa
-            const iframeMapa = document.getElementById('iframe-mapa');
-            if (iframeMapa && mapasURLs[tipo]) {
-                iframeMapa.src = mapasURLs[tipo];
-            }
-
-            // Cambiar textos según el botón presionado
-            if (tipo === 'renacer') {
-                document.getElementById('modulo-titulo-tag').innerText = "Módulo General Renacer";
-                document.getElementById('modulo-titulo-principal').innerText = "TRABAJOS ALCALDÍA DE CARACAS";
-                document.getElementById('modulo-subtitulo').innerText = "REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS";
-                document.getElementById('mapa-titulo').innerText = "MAPA GENERAL DE OBRAS Y TRABAJOS (RENACER COMPLETO)";
-                document.getElementById('indicador-total-obras').innerText = "42";
-                document.getElementById('indicador-multifamiliares').innerText = "30";
-                document.getElementById('indicador-unifamiliares').innerText = "6";
-                actualizarGraficaAvance(totalObrasData.labels, totalObrasData.valores);
-            } else if (tipo === '1x10') {
-                document.getElementById('modulo-titulo-tag').innerText = "SISTEMA 1X10 DEL BUEN GOBIERNO";
-                document.getElementById('modulo-titulo-principal').innerText = "REPORTES Y SOLICITUDES DE COMUNIDADES";
-                document.getElementById('modulo-subtitulo').innerText = "MONITOREO DIRECTO DE CASOS Y SOLUCIONES COMUNITARIAS EN CARACAS";
-                document.getElementById('mapa-titulo').innerText = "MAPA DE REPORTE Y CASOS 1X10 DEL BUEN GOBIERNO";
-                document.getElementById('indicador-total-obras').innerText = "18";
-                document.getElementById('indicador-multifamiliares').innerText = "12";
-                document.getElementById('indicador-unifamiliares').innerText = "4";
-                actualizarGraficaAvance(
-                    ["23 DE JULIO 1X10", "CARICUAO 1X10", "COCHE 1X10", "LA VEGA 1X10", "EL VALLE 1X10", "MACARAO 1X10"], 
-                    [70, 85, 40, 60, 50, 30]
-                );
-            } else if (tipo === 'habitable') {
-                document.getElementById('modulo-titulo-tag').innerText = "PROGRAMA CARACAS HABITABLE";
-                document.getElementById('modulo-titulo-principal').innerText = "MITIGACIÓN DE RIESGO Y VIVIENDA";
-                document.getElementById('modulo-subtitulo').innerText = "EVALUACIÓN DE ESTRUCTURAS, RESTRUCTURACIÓN URBANA Y PLANES DE ASISTENCIA";
-                document.getElementById('mapa-titulo').innerText = "MAPA DE EVALUACIÓN Y RIESGO URBANO (CARACAS HABITABLE)";
-                document.getElementById('indicador-total-obras').innerText = "24";
-                document.getElementById('indicador-multifamiliares').innerText = "18";
-                document.getElementById('indicador-unifamiliares').innerText = "2";
-                actualizarGraficaAvance(
-                    ["SAN AGUSTIN HABITABLE", "ALTAGRACIA HABITABLE", "LA CANDELARIA HABITABLE", "SAN JOSE HABITABLE"], 
-                    [45, 65, 80, 50]
-                );
-            }
+        function scrollASeccion(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function renderizarTodasLasGraficas() {
-            // 1. Gráfica Bar Avance
-            const ctxA = document.getElementById("chartAvanceGeneralObras");
-            if (ctxA) {
-                chartAvance = new Chart(ctxA, {
+        window.onload = function() {
+            // 1. Gráfica de Avance Completo por Obra
+            const ctxAvance = document.getElementById('chartAvanceCompleto');
+            if (ctxAvance) {
+                new Chart(ctxAvance, {
                     type: 'bar',
                     data: {
-                        labels: totalObrasData.labels,
+                        labels: [
+                            "Edificio San José", "CORAZÓN DE JESÚS", "Campamento T.G.B. de Paz...", "Campamento T.G.B. de Paz Caricuao", 
+                            "Campamento T.G.B. de Paz El Valle", "OPPE 11 El Gigante de la Patria", "Edificio Alfa", "METROCABLE EL MANGUITO", 
+                            "VIVIENDAS UNIFAMILIAR", "EDIFICIO CONTINENTE", "Urbanización La Rinconada", "MACTOR", "ACONCAGUA", 
+                            "5 VIVIENDAS UNIFAMILIAR", "Edificio Villa San José", "OPPE 47", "3 VIVIENDAS EN CRISTO REY", "LA LIBERTAD", 
+                            "LA RIVERA", "OPPE 17", "Edificio Pastorin", "Edificio Centro Residencial Catia", "OPPE 44", "Edificio América", 
+                            "OPPE 8", "OPPE 57", "OPPE 58", "OPPE 18", "URB.CARLOS DELGADO CHALBAUD"
+                        ],
                         datasets: [{
                             label: '% Avance Físico',
-                            data: totalObrasData.valores,
+                            data: [93, 91, 88, 80, 80, 75, 70, 65, 52, 47, 45, 41, 35, 35, 22, 20, 17, 16, 15, 14, 10, 10, 8, 5, 3, 2, 1, 0, 0],
                             backgroundColor: '#800000',
-                            borderRadius: 4
+                            borderRadius: 3
                         }]
                     },
                     options: {
@@ -314,7 +497,7 @@
                         maintainAspectRatio: false,
                         scales: {
                             y: { beginAtZero: true, max: 100 },
-                            x: { ticks: { font: { size: 9 }, maxRotation: 65, minRotation: 45 } }
+                            x: { ticks: { font: { size: 9 }, maxRotation: 60, minRotation: 40 } }
                         },
                         plugins: { legend: { display: false } }
                     }
@@ -322,15 +505,15 @@
             }
 
             // 2. Gráfica Entes
-            const ctxE = document.getElementById("chartEntesEjecutores");
-            if (ctxE) {
-                chartEntes = new Chart(ctxE, {
+            const ctxEntes = document.getElementById('chartEntes');
+            if (ctxEntes) {
+                new Chart(ctxEntes, {
                     type: 'doughnut',
                     data: {
-                        labels: ["Proambiente", "Corp. Servicios", "Fundacaracas", "Otros"],
+                        labels: ["Corp. Servicios Municipales", "Fundacaracas", "Cuerpo de Ingenieros OMB", "FONDEC", "INGRAD", "INTRAVALCA", "Otros"],
                         datasets: [{
-                            data: [23, 12, 5, 2],
-                            backgroundColor: ['#800000', '#d97706', '#2563eb', '#059669']
+                            data: [23, 10, 4, 2, 2, 1, 3],
+                            backgroundColor: ['#800000', '#d97706', '#2563eb', '#10b981', '#8b5cf6', '#ec4899', '#64748b']
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
@@ -338,29 +521,37 @@
             }
 
             // 3. Gráfica Riesgo
-            const ctxR = document.getElementById("chartEstadoRiesgo");
-            if (ctxR) {
-                chartRiesgo = new Chart(ctxR, {
+            const ctxRiesgo = document.getElementById('chartRiesgo');
+            if (ctxRiesgo) {
+                new Chart(ctxRiesgo, {
                     type: 'doughnut',
                     data: {
-                        labels: ["Bajo Riesgo", "Riesgo Moderado", "Alto Riesgo"],
+                        labels: ["Sin clasificar (18)", "Amarillo (17)", "Rojo (4)", "Rojo - Ama... (2)", "Verde (1)"],
                         datasets: [{
-                            data: [25, 12, 5],
-                            backgroundColor: ['#16a34a', '#eab308', '#dc2626']
+                            data: [18, 17, 4, 2, 1],
+                            backgroundColor: ['#94a3b8', '#eab308', '#dc2626', '#f97316', '#22c55e']
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             }
-        }
 
-        function actualizarGraficaAvance(labels, data) {
-            if (chartAvance) {
-                chartAvance.data.labels = labels;
-                chartAvance.data.datasets[0].data = data;
-                chartAvance.update();
+            // 4. Gráfica Símica Habitable
+            const ctxSismico = document.getElementById('chartSismico');
+            if (ctxSismico) {
+                new Chart(ctxSismico, {
+                    type: 'pie',
+                    data: {
+                        labels: ["Verde (56.6%)", "Amarillo (20.7%)", "Rojo (18.8%)", "Sin Clasif. (3.9%)"],
+                        datasets: [{
+                            data: [56.6, 20.7, 18.8, 3.9],
+                            backgroundColor: ['#22c55e', '#eab308', '#dc2626', '#94a3b8']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
             }
-        }
+        };
     </script>
 </body>
 </html>
