@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Control de Caché para actualización inmediata en GitHub Pages -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <title>GEO RENACER CARACAS - Tablero de Control de Infraestructura y Geoposicionamiento de Riesgo</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -12,6 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Roboto', sans-serif; }
         h1, h2, h3, h4, .font-heading { font-family: 'Montserrat', sans-serif; }
@@ -196,7 +203,7 @@
                 </div>
             </div>
 
-            <!-- GRÁFICAS SECUNDARIAS: ENTES EJECUTORES + ESTADO DE RIESGO NATIVO -->
+            <!-- GRÁFICAS SECUNDARIAS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-200">
                 <div class="space-y-2">
                     <h4 class="text-xs font-bold text-slate-700 text-center uppercase">Distribución de Obras por Ente Ejecutor</h4>
@@ -212,7 +219,7 @@
                 </div>
             </div>
 
-            <!-- GRÁFICA DE DEMOLICIÓN ABAJO -->
+            <!-- GRÁFICA DE DEMOLICIÓN -->
             <div class="pt-6 border-t border-gray-200 space-y-2">
                 <h4 class="text-xs font-bold text-slate-700 text-center uppercase">% Avance Físico de Obra de Demolición frente a Urbanismo</h4>
                 <div class="h-64 relative bg-slate-50 p-2 rounded-xl border border-gray-200 max-w-2xl mx-auto">
@@ -235,14 +242,14 @@
         </div>
     </section>
 
-    <!-- SECCIÓN NUEVA: MATRIZ CONSOLIDADA DE DATOS (GOOGLE SHEETS) -->
+    <!-- SECCIÓN: MATRIZ CONSOLIDADA DE DATOS -->
     <section id="matriz-datos" class="max-w-7xl mx-auto px-4 py-10 w-full space-y-6">
         <div class="text-center space-y-2 border-b border-gray-200 pb-4">
             <div class="inline-flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">
                 <i class="fa-solid fa-table"></i> <span>Base de Datos Oficial</span>
             </div>
             <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">MATRIZ CONSOLIDADA DE DATOS</h2>
-            <p class="text-xs font-bold text-gray-600 tracking-wider uppercase">VISUALIZACIÓN EN TIEMPO REAL DE REGISTROS, MÉTRICAS Y SEMÁFORO DE GESTIÓN</p>
+            <p class="text-xs font-bold text-gray-600 tracking-wider uppercase">PANEL DE DECISIONES, PRIORIDADES Y MÉTRICAS DE GESTIÓN</p>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-4">
@@ -251,12 +258,12 @@
                     <h3 class="text-sm font-extrabold text-slate-900 uppercase">TABLA MAESTRA DE CONTROL</h3>
                     <p class="text-xs text-gray-500">Datos sincronizados automáticamente desde tu Google Sheet</p>
                 </div>
-                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRcOFvLksPK6Adgv6-K0YYJBRT19UeaigY0olXdK9AGNUjSKFDBICGhGQZrpDwDjg/pubhtml" target="_blank" class="text-xs font-bold text-dark-red hover:underline flex items-center gap-1 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
+                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQtz-qHEgDnJ0lIASQgWYAP--v856MzYzzk6cCwHUCRj3OaX92kmeJR_55BPyvFBA/pubhtml" target="_blank" class="text-xs font-bold text-dark-red hover:underline flex items-center gap-1 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
                     <i class="fa-solid fa-external-link-alt"></i> Ver en pantalla completa
                 </a>
             </div>
             <div class="sheet-wrapper shadow-inner border border-gray-300">
-                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRcOFvLksPK6Adgv6-K0YYJBRT19UeaigY0olXdK9AGNUjSKFDBICGhGQZrpDwDjg/pubhtml?gid=1777356927&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQtz-qHEgDnJ0lIASQgWYAP--v856MzYzzk6cCwHUCRj3OaX92kmeJR_55BPyvFBA/pubhtml?widget=true&amp;headers=false"></iframe>
             </div>
         </div>
     </section>
@@ -486,9 +493,9 @@
         </p>
     </footer>
 
-    <!-- LÓGICA DE GRÁFICOS -->
+    <!-- LÓGICA DE GRÁFICOS (DOM CONCURRENTE) -->
     <script>
-        window.onload = function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const proyectosObras = [
                 "Edificio San José", "CORAZÓN DE JESÚS", "Campamento T.G.B. de Paz...", "Campamento T.G.B. de Paz Caricuao",
                 "Campamento T.G.B. de Paz El Valle", "OPPE 11 El Gigante de la Patria", "Edificio Alfa", "METROCABLE EL MANGUITO",
@@ -582,7 +589,7 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
-        };
+        });
     </script>
 </body>
 </html>
