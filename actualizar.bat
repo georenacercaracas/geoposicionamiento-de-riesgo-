@@ -34,3 +34,17 @@ echo ¡Proceso completado con exito!
 echo El tablero se actualizara en la web en unos instantes.
 echo ========================================================
 pause
+# --- AL FINAL DE TU SCRIPT DE PYTHON ---
+
+# 1. Guardas tu Excel como siempre lo haces:
+df_unificado.to_excel(
+    r"C:\Users\USUARIO\Desktop\geo-renacer-caracas2\reporte_master.xlsx",
+    index=False,
+)
+
+# 2. AGREGAS ESTA LÍNEA NUEVA para que cree el archivo CSV de la web:
+df_unificado.to_csv(
+    r"C:\Users\USUARIO\Desktop\geo-renacer-caracas\datos.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
