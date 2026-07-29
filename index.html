@@ -3,10 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
     <title>GEO RENACER CARACAS - Tablero de Control de Infraestructura y Geoposicionamiento de Riesgo</title>
     
     <!-- Tailwind CSS -->
@@ -22,7 +18,7 @@
     
     <style>
         body { font-family: 'Roboto', sans-serif; }
-        h1, h2, h3, h4, .font-heading { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
         .card-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
         .text-dark-red { color: #800000; }
         .bg-dark-red { background-color: #800000; }
@@ -31,16 +27,16 @@
         .sheet-wrapper { position: relative; height: 550px; overflow: hidden; border-radius: 0.75rem; background: #fff; }
         .sheet-wrapper iframe { width: 100%; height: 100%; border: 0; }
         .chart-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tab-btn.active { background-color: #800000; color: white; border-color: #800000; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- ENCABEZADO SUPERIOR FIJO -->
+    <!-- ENCABEZADO SUPERIOR -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <img src="logo.png" alt="Alcaldía de Caracas" class="h-10 md:h-12 object-contain" onerror="this.style.display='none'">
-                <div class="text-xl font-black tracking-tighter text-slate-900 border-l pl-3 border-gray-300">
+                <div class="text-xl font-black tracking-tighter text-slate-900 border-l-4 border-red-800 pl-3">
                     <span class="text-dark-red">GEO</span> RENACER
                 </div>
             </div>
@@ -56,41 +52,43 @@
     </header>
 
     <!-- BANNER HERO PRINCIPAL -->
-    <header class="relative bg-slate-950 text-white overflow-hidden shadow-2xl">
-        <div class="absolute inset-0 z-0">
-            <img src="avila.jpg" alt="Toma del Ávila en Caracas" class="w-full h-full object-cover" onerror="this.style.display='none'">
-            <div class="absolute inset-0 bg-slate-950/40"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div class="bg-slate-900/85 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/15 shadow-2xl flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left w-full">
-                <div class="flex-shrink-0 bg-white/10 p-3 rounded-2xl border border-white/20 shadow-inner">
-                    <img src="logo.png" alt="Logo Geo Renacer Caracas" class="h-16 w-16 md:h-20 md:w-20 object-contain brightness-200" onerror="this.style.display='none'">
-                </div>
-
-                <div class="space-y-2">
-                    <span class="inline-block text-xs md:text-sm font-semibold tracking-widest text-cyan-300 uppercase bg-cyan-950/90 px-3 py-1 rounded-full border border-cyan-800">
-                        <i class="fa-solid fa-mountain-sun mr-1.5"></i> Sistema de Monitoreo Urbano
-                    </span>
-                    <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">
-                        GEO RENACER CARACAS
-                    </h1>
-                    <p class="text-xs md:text-sm tracking-widest uppercase text-gray-200 font-bold drop-shadow">
-                        TABLERO DE CONTROL DE INFRAESTRUCTURA Y GEOPOSICIONAMIENTO DE RIESGO
-                    </p>
-                </div>
-            </div>
+    <header class="relative bg-slate-950 text-white overflow-hidden shadow-2xl py-10 md:py-14">
+        <div class="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center text-center space-y-3">
+            <span class="text-xs md:text-sm font-semibold tracking-widest text-cyan-300 uppercase bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
+                <i class="fa-solid fa-mountain-sun mr-1.5"></i> Sistema de Monitoreo Urbano
+            </span>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white">
+                GEO RENACER CARACAS
+            </h1>
+            <p class="text-xs md:text-sm tracking-widest uppercase text-gray-200 font-bold">
+                TABLERO DE CONTROL DE INFRAESTRUCTURA Y GEOPOSICIONAMIENTO DE RIESGO
+            </p>
         </div>
     </header>
 
+    <!-- BARRA DE BOTONES DE NAVEGACIÓN Y FILTROS -->
+    <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-[57px] z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-center gap-2 md:gap-4">
+            <button onclick="cambiarModulo('renacer')" id="btn-renacer" class="tab-btn active px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold uppercase transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-layer-group"></i> Renacer Completo
+            </button>
+            <button onclick="cambiarModulo('1x10')" id="btn-1x10" class="tab-btn px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-50 uppercase transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bullhorn"></i> 1x10 del Buen Gobierno
+            </button>
+            <button onclick="cambiarModulo('habitable')" id="btn-habitable" class="tab-btn px-4 py-2 rounded-xl border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-50 uppercase transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-house-chimney-crack"></i> Caracas Habitable
+            </button>
+        </div>
+    </nav>
+
     <!-- SECCIÓN DE INDICADORES -->
-    <section id="renacer" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
+    <section id="modulo-contenido" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
         <div class="text-center space-y-2 border-b border-gray-200 pb-4">
             <div class="inline-flex items-center gap-2 text-dark-red font-bold text-xs uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">
-                <i class="fa-solid fa-hammer"></i> <span>Módulo de Obras</span>
+                <i class="fa-solid fa-hammer"></i> <span id="modulo-titulo-tag">Módulo General Renacer</span>
             </div>
-            <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">TRABAJOS ALCALDÍA DE CARACAS</h2>
-            <p class="text-xs font-bold text-gray-600 tracking-wider uppercase">REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS</p>
+            <h2 id="modulo-titulo-principal" class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">TRABAJOS ALCALDÍA DE CARACAS</h2>
+            <p id="modulo-subtitulo" class="text-xs font-bold text-gray-600 tracking-wider uppercase">REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS</p>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-6">
@@ -100,6 +98,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- MÉTRICAS SOCIALES -->
                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
                     <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-users text-dark-red"></i> IMPACTO SOCIAL / BENEFICIARIOS
@@ -116,6 +115,7 @@
                     </div>
                 </div>
 
+                <!-- MÉTRICAS INFRAESTRUCTURA -->
                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-4">
                     <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider text-center border-b pb-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-city text-dark-red"></i> INFRAESTRUCTURA EN INTERVENCIÓN
@@ -149,7 +149,7 @@
                 </div>
             </div>
 
-            <!-- GRÁFICA DE AVANCE -->
+            <!-- GRÁFICA DE AVANCE GENERAL -->
             <div class="pt-6 border-t border-gray-200 space-y-3">
                 <div class="text-center">
                     <h4 class="text-base font-extrabold text-slate-900 uppercase">GRÁFICA ESTADO DE AVANCE FÍSICO EN OBRA</h4>
@@ -157,6 +157,22 @@
                 <div class="chart-scroll-container bg-slate-50 p-4 rounded-xl border border-gray-200">
                     <div style="min-width: 800px; height: 350px; position: relative;">
                         <canvas id="chartAvanceGeneralObras"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRÁFICAS GENERALES ADICIONALES (ENTES Y ESTADO DE RIESGO) -->
+            <div class="pt-6 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
+                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">DISTRIBUCIÓN POR ENTE EJECUTOR</h4>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="chartEntesEjecutores"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 text-center space-y-2">
+                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">CLASIFICACIÓN DE RIESGO</h4>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="chartEstadoRiesgo"></canvas>
                     </div>
                 </div>
             </div>
@@ -175,6 +191,7 @@
     <section id="matriz-datos" class="max-w-7xl mx-auto px-4 py-8 w-full space-y-6">
         <div class="text-center space-y-2 border-b border-gray-200 pb-4">
             <h2 class="text-2xl md:text-3xl font-black text-dark-red tracking-tight uppercase">MATRIZ CONSOLIDADA DE DATOS</h2>
+            <p class="text-xs font-bold text-gray-600 tracking-wider uppercase">PANEL DE DECISIONES, PRIORIDADES Y MÉTRICAS DE GESTIÓN</p>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow space-y-4">
@@ -188,85 +205,112 @@
         <p class="text-xs text-gray-400">GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
     </footer>
 
-    <!-- SCRIPT DE CARGA ROBUSTO -->
+    <!-- SCRIPT CONTROLADOR Y GRÁFICAS GENERALES -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Intentar leer datos.csv
-            if (typeof Papa !== 'undefined') {
-                Papa.parse("datos.csv", {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            renderizarConDatosCSV(results.data);
-                        } else {
-                            renderizarGraficaPorDefecto();
-                        }
+        let chartAvance = null;
+        let chartEntes = null;
+        let chartRiesgo = null;
+
+        window.onload = function() {
+            renderizarGraficasGenerales();
+        };
+
+        function cambiarModulo(tipo) {
+            // Actualizar estado de botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-red-800', 'text-white');
+                btn.classList.add('text-gray-700', 'hover:bg-gray-50');
+            });
+
+            const btnActivo = document.getElementById(`btn-${tipo}`);
+            if (btnActivo) {
+                btnActivo.classList.add('active');
+            }
+
+            // Cambiar textos según el botón presionado
+            if (tipo === 'renacer') {
+                document.getElementById('modulo-titulo-tag').innerText = "Módulo General Renacer";
+                document.getElementById('modulo-titulo-principal').innerText = "TRABAJOS ALCALDÍA DE CARACAS";
+                document.getElementById('modulo-subtitulo').innerText = "REHABILITACIÓN Y REPARACIÓN: BRIGADAS DE SOLUCIONES, INGENIEROS Y CUADRILLAS DE LA ALCALDÍA DE CARACAS";
+                document.getElementById('indicador-total-obras').innerText = "42";
+                document.getElementById('indicador-multifamiliares').innerText = "30";
+                document.getElementById('indicador-unifamiliares').innerText = "6";
+            } else if (tipo === '1x10') {
+                document.getElementById('modulo-titulo-tag').innerText = "SISTEMA 1X10 DEL BUEN GOBIERNO";
+                document.getElementById('modulo-titulo-principal').innerText = "REPORTES Y SOLICITUDES DE COMUNIDADES";
+                document.getElementById('modulo-subtitulo').innerText = "MONITOREO DIRECTO DE CASOS Y SOLUCIONES COMUNITARIAS EN CARACAS";
+                document.getElementById('indicador-total-obras').innerText = "18";
+                document.getElementById('indicador-multifamiliares').innerText = "12";
+                document.getElementById('indicador-unifamiliares').innerText = "4";
+            } else if (tipo === 'habitable') {
+                document.getElementById('modulo-titulo-tag').innerText = "PROGRAMA CARACAS HABITABLE";
+                document.getElementById('modulo-titulo-principal').innerText = "MITIGACIÓN DE RIESGO Y VIVIENDA";
+                document.getElementById('modulo-subtitulo').innerText = "EVALUACIÓN DE ESTRUCTURAS, RESTRUCTURACIÓN URBANA Y PLANES DE ASISTENCIA";
+                document.getElementById('indicador-total-obras').innerText = "24";
+                document.getElementById('indicador-multifamiliares').innerText = "18";
+                document.getElementById('indicador-unifamiliares').innerText = "2";
+            }
+        }
+
+        function renderizarGraficasGenerales() {
+            // 1. Gráfica Bar Avance
+            const ctxA = document.getElementById("chartAvanceGeneralObras");
+            if (ctxA) {
+                chartAvance = new Chart(ctxA, {
+                    type: 'bar',
+                    data: {
+                        labels: ["23 DE EL CRISTO", "23 DE EL LIBERTADOR", "ALTAGRACIA ESQUINA", "CARICUAO Gran Mazo", "CATEDRAL Av. BARALT", "COCHE La Rinconada", "LA CANDELARIA BELLAS ARTES", "SAN AGUSTIN METROCABLE"],
+                        datasets: [{
+                            label: '% Avance Físico',
+                            data: [15, 15, 34, 85, 47, 35, 45, 55],
+                            backgroundColor: '#800000',
+                            borderRadius: 4
+                        }]
                     },
-                    error: function() {
-                        renderizarGraficaPorDefecto();
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 100 },
+                            x: { ticks: { font: { size: 9 }, maxRotation: 65, minRotation: 45 } }
+                        },
+                        plugins: { legend: { display: false } }
                     }
                 });
-            } else {
-                renderizarGraficaPorDefecto();
             }
 
-            function renderizarConDatosCSV(datos) {
-                let etiquetas = [];
-                let valores = [];
-
-                datos.forEach((row, i) => {
-                    let nombre = row.Parroquia || row.Sector || row.Obra || row.OBRA || `Obra ${i+1}`;
-                    let avanceRaw = row.Tot_Of_Avance || row.Avance || row.AVANCE || row.Porcentaje_Avance || "0";
-                    let avanceNum = parseFloat(avanceRaw.toString().replace("%", "").trim()) || 0;
-                    if (avanceNum > 0 && avanceNum <= 1) avanceNum = avanceNum * 100;
-
-                    etiquetas.push(nombre);
-                    valores.push(Math.round(avanceNum));
+            // 2. Gráfica Entes
+            const ctxE = document.getElementById("chartEntesEjecutores");
+            if (ctxE) {
+                chartEntes = new Chart(ctxE, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["Proambiente", "Corp. Servicios", "Fundacaracas", "Otros"],
+                        datasets: [{
+                            data: [23, 12, 5, 2],
+                            backgroundColor: ['#800000', '#d97706', '#2563eb', '#059669']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
                 });
-
-                if (document.getElementById("indicador-total-obras")) {
-                    document.getElementById("indicador-total-obras").innerText = datos.length;
-                }
-
-                dibujarGrafica(etiquetas, valores);
             }
 
-            function renderizarGraficaPorDefecto() {
-                // Datos base de muestra en caso de no leer el CSV
-                const etiquetas = ["23 DE EL CRISTO", "23 DE EL LA LIBERTADOR", "ALTAGRACIA ESQUINA", "CARICUAO Gran Mazo", "CATEDRAL Av. BARALT", "COCHE La Rinconada", "LA CANDELARIA BELLAS ARTES", "SAN AGUSTIN METROCABLE"];
-                const valores = [15, 15, 34, 85, 47, 35, 45, 55];
-                dibujarGrafica(etiquetas, valores);
+            // 3. Gráfica Riesgo
+            const ctxR = document.getElementById("chartEstadoRiesgo");
+            if (ctxR) {
+                chartRiesgo = new Chart(ctxR, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["Bajo Riesgo", "Riesgo Moderado", "Alto Riesgo"],
+                        datasets: [{
+                            data: [25, 12, 5],
+                            backgroundColor: ['#16a34a', '#eab308', '#dc2626']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
             }
-
-            function dibujarGrafica(labels, data) {
-                const ctx = document.getElementById("chartAvanceGeneralObras");
-                if (ctx && typeof Chart !== 'undefined') {
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: '% Avance Físico',
-                                data: data,
-                                backgroundColor: '#800000',
-                                borderRadius: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: { beginAtZero: true, max: 100 },
-                                x: { ticks: { font: { size: 9 }, maxRotation: 65, minRotation: 45 } }
-                            },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-                }
-            }
-        });
+        }
     </script>
 </body>
 </html>
