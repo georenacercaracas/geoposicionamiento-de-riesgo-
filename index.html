@@ -1,186 +1,200 @@
-// URL de tu hoja de Google Sheets (Renacer/Obras) publicada como CSV
-const URL_RENACER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-RkmymoY0SmUI_3J-3vAGwuYDEs5Qf_vzNYXsTzQ7-DJd4ztNY4wJ-BomStIMOg/pub?output=csv";
+<!-- ... AQUÍ TERMINA TU CONTENIDO HTML DE LAS SECCIONES Y MAPAS ... -->
 
-// Descargar CSV de Google Sheets
-async function obtenerDatosDrive() {
-    try {
-        const respuesta = await fetch(URL_RENACER_CSV);
-        const textoCSV = await respuesta.text();
-        return parsearCSV(textoCSV);
-    } catch (error) {
-        console.error("Error al cargar la data desde Drive:", error);
-        return [];
-    }
-}
+    </main>
 
-// Convertidor sencillo de CSV a Objetos
-function parsearCSV(csv) {
-    const lineas = csv.split('\n').filter(l => l.trim() !== '');
-    if (lineas.length < 2) return [];
-    
-    const encabezados = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-    const resultados = [];
+    <footer class="bg-slate-900 text-white mt-auto py-8 text-center text-xs text-gray-400">
+        <p>GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
+    </footer>
 
-    for (let i = 1; i < lineas.length; i++) {
-        const valores = lineas[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-        const fila = {};
-        encabezados.forEach((encabezado, indice) => {
-            fila[encabezado] = valores[indice] || '';
-        });
-        resultados.push(fila);
-    }
-    return resultados;
-}
+    <!-- ETIOUETA DE INICIO DEL SCRIPT -->
+    <script>
+        // URL de tu hoja de Google Sheets (Renacer/Obras) publicada como CSV
+        const URL_RENACER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-RkmymoY0SmUI_3J-3vAGwuYDEs5Qf_vzNYXsTzQ7-DJd4ztNY4wJ-BomStIMOg/pub?output=csv";
 
-// Renderizado y separación por tipo de intervención (Reconstrucción vs Demolición)
-async function generarGraficasSeparadas() {
-    const datosProyectos = await obtenerDatosDrive();
-    
-    if (datosProyectos.length === 0) {
-        console.warn("No se encontraron datos en la hoja de cálculo.");
-        return;
-    }
-
-    const obrasReconstruccion = [];
-    const obrasDemolicion = [];
-
-    datosProyectos.forEach(item => {
-        const nombre = item['Nombre de la Obra'] || item['Infraestructura'] || item['Sector'] || 'Sin Nombre';
-        const tipoIntervencion = String(item['Tipo de Intervención'] || item['Tipo'] || '').toLowerCase();
-        
-        // Extraer porcentaje de avance limpio
-        const avanceRaw = item['% Avance Físico de Obra de Reconstrucción'] || item['% Avance Físico'] || item['Avance'] || '0';
-        const porcentaje = parseFloat(String(avanceRaw).replace('%', '').replace(',', '.')) || 0;
-
-        const registro = { obra: nombre, porcentaje: porcentaje };
-
-        // Clasificar según la columna correspondiente de la tabla
-        if (tipoIntervencion.includes('demolicion') || tipoIntervencion.includes('demolición')) {
-            obrasDemolicion.push(registro);
-        } else {
-            // Por defecto o si dice reconstrucción se asigna a Reconstrucción
-            obrasReconstruccion.push(registro);
-        }
-    });
-
-    // Actualizar contadores totales
-    const badgeTotal = document.getElementById('total-obras-badge');
-    if (badgeTotal) badgeTotal.textContent = datosProyectos.length;
-
-    // Renderizar ambas gráficas con sus respectivos datos
-    construirGraficaBarra('chartAvanceReconstruccion', 'container-reconstruccion-width', obrasReconstruccion, '#800000');
-    construirGraficaBarra('chartAvanceDemolicion', 'container-demolicion-width', obrasDemolicion, '#d97706');
-}
-
-// Función genérica para dibujar barras
-function construirGraficaBarra(canvasId, containerId, listaDatos, colorBarra) {
-    listaDatos.sort((a, b) => b.porcentaje - a.porcentaje);
-
-    const etiquetas = listaDatos.map(item => item.obra);
-    const valores = listaDatos.map(item => item.porcentaje);
-
-    const contenedor = document.getElementById(containerId);
-    if (contenedor) {
-        const minWidth = Math.max(800, listaDatos.length * 48);
-        contenedor.style.minWidth = minWidth + 'px';
-    }
-
-    const elemCanvas = document.getElementById(canvasId);
-    if (!elemCanvas) return;
-    
-    const ctx = elemCanvas.getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: etiquetas,
-            datasets: [{
-                label: 'Porcentaje de Avance Físico',
-                data: valores,
-                backgroundColor: colorBarra,
-                borderRadius: 4,
-                barThickness: 22
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        font: { size: 10, weight: 'bold' },
-                        callback: function(v) { return v + '%'; }
-                    },
-                    grid: { color: '#e2e8f0' }
-                },
-                x: {
-                    ticks: {
-                        font: { size: 9, weight: 'bold' },
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
-                    grid: { display: false }
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) { return ' Ejecución: ' + ctx.parsed.y + '%'; }
-                    }
-                }
+        // Descargar CSV de Google Sheets
+        async function obtenerDatosDrive() {
+            try {
+                const respuesta = await fetch(URL_RENACER_CSV);
+                const textoCSV = await respuesta.text();
+                return parsearCSV(textoCSV);
+            } catch (error) {
+                console.error("Error al cargar la data desde Drive:", error);
+                return [];
             }
         }
-    });
-}
 
-window.onload = function() {
-    generarGraficasSeparadas();
+        // Convertidor sencillo de CSV a Objetos
+        function parsearCSV(csv) {
+            const lineas = csv.split('\n').filter(l => l.trim() !== '');
+            if (lineas.length < 2) return [];
+            
+            const encabezados = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+            const resultados = [];
 
-    // Gráficas secundarias (Entes y Estado de Riesgo)
-    const ctxEntes = document.getElementById('chartEntes');
-    if (ctxEntes) {
-        new Chart(ctxEntes, {
-            type: 'doughnut',
-            data: { 
-                labels: ["PROHÁBITAT LIBERTADOR", "Corp. Servicios", "Fundacaracas", "Ingenieros OMB", "FONDEC", "Otros"], 
-                datasets: [{ 
-                    data: [15, 12, 8, 4, 2, 1], 
-                    backgroundColor: ['#800000', '#d97706', '#2563eb', '#10b981', '#8b5cf6', '#64748b'] 
-                }] 
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
+            for (let i = 1; i < lineas.length; i++) {
+                const valores = lineas[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                const fila = {};
+                encabezados.forEach((encabezado, indice) => {
+                    fila[encabezado] = valores[indice] || '';
+                });
+                resultados.push(fila);
+            }
+            return resultados;
+        }
 
-    const ctxRiesgo = document.getElementById('chartRiesgo');
-    if (ctxRiesgo) {
-        new Chart(ctxRiesgo, {
-            type: 'doughnut',
-            data: { 
-                labels: ["Sin clasificar", "Amarillo", "Rojo", "Verde"], 
-                datasets: [{ 
-                    data: [18, 17, 6, 1], 
-                    backgroundColor: ['#94a3b8', '#eab308', '#dc2626', '#22c55e'] 
-                }] 
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
+        // Renderizado y separación por tipo de intervención (Reconstrucción vs Demolición)
+        async function generarGraficasSeparadas() {
+            const datosProyectos = await obtenerDatosDrive();
+            
+            if (datosProyectos.length === 0) {
+                console.warn("No se encontraron datos en la hoja de cálculo.");
+                return;
+            }
 
-    const ctxSismico = document.getElementById('chartSismico');
-    if (ctxSismico) {
-        new Chart(ctxSismico, {
-            type: 'pie',
-            data: { 
-                labels: ["Verde (56.6%)", "Amarillo (20.7%)", "Rojo (18.8%)", "Sin Clasif. (3.9%)"], 
-                datasets: [{ 
-                    data: [56.6, 20.7, 18.8, 3.9], 
-                    backgroundColor: ['#22c55e', '#eab308', '#dc2626', '#94a3b8'] 
-                }] 
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
-};
+            const obrasReconstruccion = [];
+            const obrasDemolicion = [];
+
+            datosProyectos.forEach(item => {
+                const nombre = item['Nombre de la Obra'] || item['Infraestructura'] || item['Sector'] || 'Sin Nombre';
+                const tipoIntervencion = String(item['Tipo de Intervención'] || item['Tipo'] || '').toLowerCase();
+                
+                // Extraer porcentaje de avance limpio
+                const avanceRaw = item['% Avance Físico de Obra de Reconstrucción'] || item['% Avance Físico'] || item['Avance'] || '0';
+                const porcentaje = parseFloat(String(avanceRaw).replace('%', '').replace(',', '.')) || 0;
+
+                const registro = { obra: nombre, porcentaje: porcentaje };
+
+                // Clasificar según la columna correspondiente de la tabla
+                if (tipoIntervencion.includes('demolicion') || tipoIntervencion.includes('demolición')) {
+                    obrasDemolicion.push(registro);
+                } else {
+                    obrasReconstruccion.push(registro);
+                }
+            });
+
+            // Actualizar contadores totales
+            const badgeTotal = document.getElementById('total-obras-badge');
+            if (badgeTotal) badgeTotal.textContent = datosProyectos.length;
+
+            // Renderizar ambas gráficas
+            construirGraficaBarra('chartAvanceReconstruccion', 'container-reconstruccion-width', obrasReconstruccion, '#800000');
+            construirGraficaBarra('chartAvanceDemolicion', 'container-demolicion-width', obrasDemolicion, '#d97706');
+        }
+
+        // Función genérica para dibujar barras
+        function construirGraficaBarra(canvasId, containerId, listaDatos, colorBarra) {
+            listaDatos.sort((a, b) => b.porcentaje - a.porcentaje);
+
+            const etiquetas = listaDatos.map(item => item.obra);
+            const valores = listaDatos.map(item => item.porcentaje);
+
+            const contenedor = document.getElementById(containerId);
+            if (contenedor) {
+                const minWidth = Math.max(800, listaDatos.length * 48);
+                contenedor.style.minWidth = minWidth + 'px';
+            }
+
+            const elemCanvas = document.getElementById(canvasId);
+            if (!elemCanvas) return;
+            
+            const ctx = elemCanvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: etiquetas,
+                    datasets: [{
+                        label: 'Porcentaje de Avance Físico',
+                        data: valores,
+                        backgroundColor: colorBarra,
+                        borderRadius: 4,
+                        barThickness: 22
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                font: { size: 10, weight: 'bold' },
+                                callback: function(v) { return v + '%'; }
+                            },
+                            grid: { color: '#e2e8f0' }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 9, weight: 'bold' },
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) { return ' Ejecución: ' + ctx.parsed.y + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.onload = function() {
+            generarGraficasSeparadas();
+
+            // Gráficas secundarias
+            const ctxEntes = document.getElementById('chartEntes');
+            if (ctxEntes) {
+                new Chart(ctxEntes, {
+                    type: 'doughnut',
+                    data: { 
+                        labels: ["PROHÁBITAT LIBERTADOR", "Corp. Servicios", "Fundacaracas", "Ingenieros OMB", "FONDEC", "Otros"], 
+                        datasets: [{ 
+                            data: [15, 12, 8, 4, 2, 1], 
+                            backgroundColor: ['#800000', '#d97706', '#2563eb', '#10b981', '#8b5cf6', '#64748b'] 
+                        }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            const ctxRiesgo = document.getElementById('chartRiesgo');
+            if (ctxRiesgo) {
+                new Chart(ctxRiesgo, {
+                    type: 'doughnut',
+                    data: { 
+                        labels: ["Sin clasificar", "Amarillo", "Rojo", "Verde"], 
+                        datasets: [{ 
+                            data: [18, 17, 6, 1], 
+                            backgroundColor: ['#94a3b8', '#eab308', '#dc2626', '#22c55e'] 
+                        }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            const ctxSismico = document.getElementById('chartSismico');
+            if (ctxSismico) {
+                new Chart(ctxSismico, {
+                    type: 'pie',
+                    data: { 
+                        labels: ["Verde (56.6%)", "Amarillo (20.7%)", "Rojo (18.8%)", "Sin Clasif. (3.9%)"], 
+                        datasets: [{ 
+                            data: [56.6, 20.7, 18.8, 3.9], 
+                            backgroundColor: ['#22c55e', '#eab308', '#dc2626', '#94a3b8'] 
+                        }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+        };
+    </script>
+    <!-- ETIQUETA DE CIERRE DEL SCRIPT -->
+
+</body>
+</html>
