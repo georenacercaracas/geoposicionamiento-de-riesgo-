@@ -1,17 +1,121 @@
-<!-- ... AQUÍ TERMINA TU CONTENIDO HTML DE LAS SECCIONES Y MAPAS ... -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO RENACER CARACAS</title>
+    <!-- Tailwind CSS y Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chart-scroll { overflow-x: auto; overflow-y: hidden; }
+        .bg-dark-red { background-color: #800000; }
+        .text-dark-red { color: #800000; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Encabezado / Navbar -->
+    <header class="bg-slate-900 text-white p-4 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide flex items-center gap-2">
+                <i class="fa-solid fa-map-location-dot text-amber-500"></i> GEO RENACER CARACAS
+            </h1>
+            <span class="bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full border border-amber-500/30 font-semibold">
+                Tablero Macro de Decisiones
+            </span>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto p-4 md:p-6 w-full flex-grow space-y-6">
+
+        <!-- Tarjetas de Resumen / Métricas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Obras en Ejecución</p>
+                    <h3 id="total-obras-badge" class="text-3xl font-extrabold text-slate-800 mt-1">--</h3>
+                </div>
+                <div class="bg-amber-50 text-amber-600 p-3 rounded-xl"><i class="fa-solid fa-helmet-safety text-2xl"></i></div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Intervenciones</p>
+                    <h3 class="text-lg font-bold text-slate-700 mt-1">Reconstrucción / Demolición</h3>
+                </div>
+                <div class="bg-red-50 text-dark-red p-3 rounded-xl"><i class="fa-solid fa-[#800000] fa-diagram-project text-2xl"></i></div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Fuente de Datos</p>
+                    <h3 class="text-sm font-semibold text-emerald-600 mt-1 flex items-center gap-1">
+                        <i class="fa-solid fa-circle-check"></i> Google Drive Conectado
+                    </h3>
+                </div>
+                <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl"><i class="fa-solid fa-cloud text-2xl"></i></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE GRÁFICAS DE AVANCE (RENACER) -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-dark-red"></i> Monitoreo de Avance Físico por Proyecto
+            </h3>
+
+            <!-- GRÁFICA 1: OBRAS DE RECONSTRUCCIÓN -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-black text-slate-700 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-building text-dark-red"></i> Obras de Reconstrucción / Rehabilitación
+                </h4>
+                <div class="chart-scroll bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div id="container-reconstruccion-width" style="min-width: 800px; height: 350px;">
+                        <canvas id="chartAvanceReconstruccion"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRÁFICA 2: OBRAS DE DEMOLICIÓN -->
+            <div class="pt-4 border-t border-slate-100 space-y-2">
+                <h4 class="text-xs font-black text-amber-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-dumpster text-amber-600"></i> Obras de Demolición
+                </h4>
+                <div class="chart-scroll bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div id="container-demolicion-width" style="min-width: 800px; height: 350px;">
+                        <canvas id="chartAvanceDemolicion"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRÁFICAS SECUNDARIAS (ENTES Y RIESGO) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h4 class="text-xs font-bold text-slate-700 uppercase mb-4">Entes Ejecutores</h4>
+                <div style="height: 220px;"><canvas id="chartEntes"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h4 class="text-xs font-bold text-slate-700 uppercase mb-4">Estado de Riesgo</h4>
+                <div style="height: 220px;"><canvas id="chartRiesgo"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h4 class="text-xs font-bold text-slate-700 uppercase mb-4">Inspección Sísmica (Habitable)</h4>
+                <div style="height: 220px;"><canvas id="chartSismico"></canvas></div>
+            </div>
+        </div>
 
     </main>
 
-    <footer class="bg-slate-900 text-white mt-auto py-8 text-center text-xs text-gray-400">
+    <!-- Pie de Página -->
+    <footer class="bg-slate-900 text-white mt-auto py-6 text-center text-xs text-gray-400">
         <p>GEO RENACER CARACAS &copy; 2026 — Distrito Capital / Gobierno de Caracas</p>
     </footer>
 
-    <!-- ETIOUETA DE INICIO DEL SCRIPT -->
+    <!-- SCRIPT DE CARGA DINÁMICA DE DATOS -->
     <script>
-        // URL de tu hoja de Google Sheets (Renacer/Obras) publicada como CSV
         const URL_RENACER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-RkmymoY0SmUI_3J-3vAGwuYDEs5Qf_vzNYXsTzQ7-DJd4ztNY4wJ-BomStIMOg/pub?output=csv";
 
-        // Descargar CSV de Google Sheets
         async function obtenerDatosDrive() {
             try {
                 const respuesta = await fetch(URL_RENACER_CSV);
@@ -23,7 +127,6 @@
             }
         }
 
-        // Convertidor sencillo de CSV a Objetos
         function parsearCSV(csv) {
             const lineas = csv.split('\n').filter(l => l.trim() !== '');
             if (lineas.length < 2) return [];
@@ -42,7 +145,6 @@
             return resultados;
         }
 
-        // Renderizado y separación por tipo de intervención (Reconstrucción vs Demolición)
         async function generarGraficasSeparadas() {
             const datosProyectos = await obtenerDatosDrive();
             
@@ -58,13 +160,11 @@
                 const nombre = item['Nombre de la Obra'] || item['Infraestructura'] || item['Sector'] || 'Sin Nombre';
                 const tipoIntervencion = String(item['Tipo de Intervención'] || item['Tipo'] || '').toLowerCase();
                 
-                // Extraer porcentaje de avance limpio
                 const avanceRaw = item['% Avance Físico de Obra de Reconstrucción'] || item['% Avance Físico'] || item['Avance'] || '0';
                 const porcentaje = parseFloat(String(avanceRaw).replace('%', '').replace(',', '.')) || 0;
 
                 const registro = { obra: nombre, porcentaje: porcentaje };
 
-                // Clasificar según la columna correspondiente de la tabla
                 if (tipoIntervencion.includes('demolicion') || tipoIntervencion.includes('demolición')) {
                     obrasDemolicion.push(registro);
                 } else {
@@ -72,16 +172,13 @@
                 }
             });
 
-            // Actualizar contadores totales
             const badgeTotal = document.getElementById('total-obras-badge');
             if (badgeTotal) badgeTotal.textContent = datosProyectos.length;
 
-            // Renderizar ambas gráficas
             construirGraficaBarra('chartAvanceReconstruccion', 'container-reconstruccion-width', obrasReconstruccion, '#800000');
             construirGraficaBarra('chartAvanceDemolicion', 'container-demolicion-width', obrasDemolicion, '#d97706');
         }
 
-        // Función genérica para dibujar barras
         function construirGraficaBarra(canvasId, containerId, listaDatos, colorBarra) {
             listaDatos.sort((a, b) => b.porcentaje - a.porcentaje);
 
@@ -147,7 +244,6 @@
         window.onload = function() {
             generarGraficasSeparadas();
 
-            // Gráficas secundarias
             const ctxEntes = document.getElementById('chartEntes');
             if (ctxEntes) {
                 new Chart(ctxEntes, {
@@ -194,7 +290,5 @@
             }
         };
     </script>
-    <!-- ETIQUETA DE CIERRE DEL SCRIPT -->
-
 </body>
 </html>
