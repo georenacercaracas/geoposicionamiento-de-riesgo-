@@ -3,204 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEO RENACER CARACAS - Tablero de Control</title>
-    
-    <!-- Tailwind CSS -->
+    <title>GEO RENACER CARACAS - Dashboard de Gestión</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- PapaParse para leer CSV/Excel exportados -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <!-- Chart.js para gráficas -->
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; }
-        .bg-header { background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); background-color: #0f172a; }
+        body {
+            background-color: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Sombras suaves e higiénicas para tarjetas */
+        .card-custom {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="text-gray-800 antialiased">
 
-    <!-- ENCABEZADO Y BANNER PRINCIPAL -->
-    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <h1 class="text-2xl font-black text-red-700 tracking-tighter">CARACAS</h1>
-            <span class="text-xl font-bold text-gray-800 border-l-2 border-gray-300 pl-4">GEO RENACER</span>
-        </div>
-        <div class="flex gap-4 text-sm font-semibold">
-            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full"><i class="fa-solid fa-circle text-xs"></i> Sistema Activo</span>
-            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full">ACTUALIZADO: JULIO 2026</span>
+    <!-- 1. ENCABEZADO / BANNER -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Reemplazar src por tu logo en la carpeta local o GitHub Pages -->
+                <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center font-bold text-lg">
+                    GRC
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">GEO RENACER CARACAS</h1>
+                    <p class="text-xs text-slate-400">Dashboard de Gestión, Monitoreo y Riesgo</p>
+                </div>
+            </div>
+            
+            <!-- Navegación Rápida -->
+            <nav class="flex space-x-2 mt-2 sm:mt-0">
+                <a href="#mapa-principal" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 transition">MAPA GENERAL</a>
+                <a href="#matriz-datos" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 transition">MATRIZ</a>
+                <a href="#indicadores" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 transition">INDICADORES</a>
+                <a href="#visores-riesgo" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 transition">MAPAS DE RIESGO</a>
+            </nav>
         </div>
     </header>
 
-    <div class="bg-header w-full py-12 px-8 text-center text-white relative shadow-inner">
-        <div class="max-w-4xl mx-auto bg-slate-900/80 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm">
-            <span class="bg-teal-700 text-teal-100 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider mb-4 inline-block">
-                <i class="fa-solid fa-layer-group"></i> Sistema de Monitoreo Urbano y Toma de Decisiones
-            </span>
-            <h2 class="text-4xl font-black mb-2 tracking-tight">GEO RENACER CARACAS</h2>
-            <p class="text-slate-300 font-medium tracking-wide">TABLERO DE CONTROL DE INFRAESTRUCTURA Y GEOPOSICIONAMIENTO DE RIESGO</p>
-        </div>
-    </div>
+    <!-- CONTENEDOR PRINCIPAL CENTRADO -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-8">
 
-    <!-- NAVEGACIÓN DE MÓDULOS -->
-    <div class="max-w-6xl mx-auto -mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 px-4 relative z-10">
-        <div class="bg-white rounded-xl shadow-md p-6 text-center border-t-4 border-red-700">
-            <i class="fa-solid fa-helmet-safety text-3xl text-red-700 mb-3"></i>
-            <h3 class="font-black text-lg mb-1">RENACER</h3>
-            <p class="text-xs text-gray-500">Obras en Ejecución y Priorización Geográfica</p>
-        </div>
-        <div class="bg-white rounded-xl shadow-md p-6 text-center border-t-4 border-yellow-500">
-            <i class="fa-solid fa-house-crack text-3xl text-yellow-500 mb-3"></i>
-            <h3 class="font-black text-lg mb-1">HABITABLE</h3>
-            <p class="text-xs text-gray-500">Inspecciones Estructurales e Indicadores de Riesgo</p>
-        </div>
-        <div class="bg-white rounded-xl shadow-md p-6 text-center border-t-4 border-blue-700">
-            <i class="fa-solid fa-clipboard-list text-3xl text-blue-700 mb-3"></i>
-            <h3 class="font-black text-lg mb-1">1 x 10</h3>
-            <p class="text-xs text-gray-500">Planificación y Asignación de Solicitudes Técnicas</p>
-        </div>
-    </div>
-
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-12">
-
-        <!-- ========================================== -->
-        <!-- MÓDULO 1: RENACER (OBRAS)                  -->
-        <!-- ========================================== -->
-        <section class="mb-16">
-            <div class="text-center mb-8">
-                <h3 class="text-red-700 font-bold text-sm tracking-widest uppercase mb-1"><i class="fa-solid fa-wrench"></i> Módulo de Obras</h3>
-                <h2 class="text-3xl font-black text-gray-900 uppercase">Trabajos Alcaldía de Caracas</h2>
-                <p class="text-gray-500 text-sm mt-2">MACRO MATRIZ PARA LA PRIORIZACIÓN DE REPARACIONES Y BRIGADAS DE SOLUCIONES</p>
-            </div>
-
-            <!-- KPIs -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
-                    <h4 class="text-gray-500 text-xs font-bold uppercase mb-2"><i class="fa-solid fa-users text-red-700"></i> Familias Beneficiadas</h4>
-                    <p class="text-4xl font-black text-gray-800">1.365</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
-                    <h4 class="text-gray-500 text-xs font-bold uppercase mb-2"><i class="fa-solid fa-building text-red-700"></i> Infraestructura en Intervención</h4>
-                    <p class="text-4xl font-black text-gray-800">42</p>
-                </div>
-            </div>
-
-            <!-- Mapa Principal -->
-            <div class="w-full bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8">
-                <h3 class="text-center font-bold text-gray-800 mb-4 uppercase text-sm">
-                    <i class="fa-solid fa-map-location-dot text-red-700"></i> Mapa de Obras Georeferenciadas
-                </h3>
-                <div class="w-full h-[500px] rounded-lg overflow-hidden border border-gray-300 bg-gray-100">
-                    <!-- REEMPLAZAR ESTE IFRAME CON EL ENLACE DEL MAPA RENACER -->
-                    <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_RENACER" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
-                </div>
-            </div>
-
-            <!-- Tabla Dinámica -->
-            <div class="w-full bg-white p-6 rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-                <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm border-b pb-2">
-                    <i class="fa-solid fa-table text-red-700"></i> Matriz de Control de Ejecución (Tabla Dinámica)
-                </h3>
-                <table class="w-full text-left border-collapse min-w-max" id="tabla-renacer">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider">
-                            <th class="p-3 border-b">ID / Sector</th>
-                            <th class="p-3 border-b">Ejecutor Asignado</th>
-                            <th class="p-3 border-b">% Avance</th>
-                            <th class="p-3 border-b">Familias</th>
-                            <th class="p-3 border-b">Evaluación Habitabilidad</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm text-gray-700" id="tabla-body-renacer">
-                        <!-- Los datos se inyectarán aquí con JavaScript usando PapaParse -->
-                        <tr class="hover:bg-slate-50 border-b">
-                            <td class="p-3 font-semibold">Urbanismo OPP 20 (San Bernardino)</td>
-                            <td class="p-3">Brisopp y Paneles Caracas</td>
-                            <td class="p-3"><span class="bg-blue-100 text-blue-800 py-1 px-2 rounded font-bold">42%</span></td>
-                            <td class="p-3">69</td>
-                            <td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Amarillo</span></td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 border-b">
-                            <td class="p-3 font-semibold">Omar Torrijos (San Agustin)</td>
-                            <td class="p-3">Corp. Servicios Municipales</td>
-                            <td class="p-3"><span class="bg-blue-100 text-blue-800 py-1 px-2 rounded font-bold">45%</span></td>
-                            <td class="p-3">266</td>
-                            <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Verde</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- 2. VISOR PRINCIPAL (MAPA SUPERIOR) -->
+        <section id="mapa-principal" class="card-custom p-4">
+            <h2 class="text-lg font-bold text-slate-800 mb-3 border-b pb-2 flex items-center justify-between">
+                <span>Visor Geográfico Principal</span>
+                <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-medium">En vivo</span>
+            </h2>
+            <div class="w-full h-[450px] rounded-lg overflow-hidden bg-gray-100">
+                <!-- REEMPLAZAR 'src' con el link de inserción (embed) de Google My Maps -->
+                <iframe 
+                    src="https://www.google.com/maps/d/embed?mid=1234567890EXAMPLE_MID&ehbc=2E312F" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- MÓDULO 2: HABITABLE (SEMAFORIZACIÓN)       -->
-        <!-- ========================================== -->
-        <section class="mb-16 bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-            <div class="text-center mb-8">
-                <h3 class="text-yellow-600 font-bold text-sm tracking-widest uppercase mb-1"><i class="fa-solid fa-magnifying-glass-chart"></i> Evaluación Estructural</h3>
-                <h2 class="text-3xl font-black text-gray-900 uppercase">Habitable</h2>
-                <p class="text-gray-500 text-sm mt-2">INDICADORES DE RIESGO POST-EVENTO PARA PRIORIZACIÓN DE RECURSOS</p>
+        <!-- 3. MATRIZ CONSOLIDADA DE DATOS -->
+        <section id="matriz-datos" class="card-custom p-4">
+            <div class="flex justify-between items-center mb-3 border-b pb-2">
+                <h2 class="text-lg font-bold text-slate-800">MATRIZ CONSOLIDADA DE DATOS</h2>
+                <span class="text-xs text-gray-500">Actualizado según reportes oficiales</span>
+            </div>
+            <div class="w-full h-[380px] rounded-lg overflow-hidden border border-gray-200">
+                <!-- REEMPLAZAR 'src' con el link de publicación Web de tu Google Sheet -->
+                <iframe 
+                    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vEXAMPLE_ID/pubhtml?widget=true&amp;headers=false" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- 4. SECCIÓN DE INDICADORES Y MÉTRICAS (KPIs + GRÁFICOS) -->
+        <section id="indicadores" class="space-y-6">
+            <!-- Tarjetas KPI -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card-custom p-4 border-l-4 border-blue-600">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Inmuebles Inspeccionados</p>
+                    <p class="text-2xl font-extrabold text-slate-800 mt-1">6,121</p>
+                </div>
+                <div class="card-custom p-4 border-l-4 border-emerald-600">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Casos Atendidos (1x10)</p>
+                    <p class="text-2xl font-extrabold text-slate-800 mt-1">9,081</p>
+                </div>
+                <div class="card-custom p-4 border-l-4 border-amber-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Obras de Demolición</p>
+                    <p class="text-2xl font-extrabold text-slate-800 mt-1">1,386</p>
+                </div>
+                <div class="card-custom p-4 border-l-4 border-purple-600">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Obras de Reconstrucción</p>
+                    <p class="text-2xl font-extrabold text-slate-800 mt-1">1,002</p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <!-- Mapa Riesgo Bajo -->
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <h4 class="text-xs font-bold text-green-800 mb-2 uppercase text-center bg-green-100 py-2 rounded">Riesgo Bajo (Verde)</h4>
-                    <div class="w-full h-[300px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_VERDE" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+            <!-- Gráficos de Chart.js -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Gráfico Dona: Servicios -->
+                <div class="card-custom p-4">
+                    <h3 class="text-sm font-bold text-slate-700 mb-4 text-center">Estado de Servicios Básicos</h3>
+                    <div class="relative h-60">
+                        <canvas id="chartServicios"></canvas>
                     </div>
                 </div>
 
-                <!-- Mapa Riesgo Moderado -->
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <h4 class="text-xs font-bold text-yellow-800 mb-2 uppercase text-center bg-yellow-100 py-2 rounded">Riesgo Moderado (Amarillo)</h4>
-                    <div class="w-full h-[300px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_AMARILLO" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                <!-- Gráfico Barras: Demolición -->
+                <div class="card-custom p-4">
+                    <h3 class="text-sm font-bold text-slate-700 mb-4 text-center">Avance: Demolición</h3>
+                    <div class="relative h-60">
+                        <canvas id="chartDemolicion"></canvas>
                     </div>
                 </div>
 
-                <!-- Mapa Riesgo Severo -->
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <h4 class="text-xs font-bold text-red-800 mb-2 uppercase text-center bg-red-100 py-2 rounded">Riesgo Severo (Rojo)</h4>
-                    <div class="w-full h-[300px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_ROJO" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                <!-- Gráfico Barras: Reconstrucción (Separado) -->
+                <div class="card-custom p-4">
+                    <h3 class="text-sm font-bold text-slate-700 mb-4 text-center">Avance: Reconstrucción</h3>
+                    <div class="relative h-60">
+                        <canvas id="chartReconstruccion"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- MÓDULO 3: 1 x 10 (MACRO DECISIONES)        -->
-        <!-- ========================================== -->
-        <section class="mb-12 bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-            <div class="text-center mb-8">
-                <h3 class="text-blue-700 font-bold text-sm tracking-widest uppercase mb-1"><i class="fa-solid fa-network-wired"></i> Planificación Estratégica</h3>
-                <h2 class="text-3xl font-black text-gray-900 uppercase">Priorización de Casos 1 x 10</h2>
-                <p class="text-gray-500 text-sm mt-2">ANÁLISIS DE DENSIDAD DE SOLICITUDES PARA DESPLIEGUE DE INSPECCIONES</p>
-            </div>
-
-            <!-- Mapas 1x10 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Mapa 1x10 - A -->
-                <div class="p-2 border border-gray-200 rounded-lg bg-gray-50">
-                    <div class="w-full h-[250px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_1X10_1" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+        <!-- 5. SECCIONES DE VISORES GEOGRÁFICOS MÚLTIPLES -->
+        <section id="visores-riesgo" class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-800 border-b pb-2">Clasificación por Sectores y Nivel de Riesgo</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Visor 1 -->
+                <div class="card-custom p-3">
+                    <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded font-semibold mb-2">Alto Riesgo</span>
+                    <h3 class="text-sm font-bold text-slate-800 mb-2">Sector / Parroquia A</h3>
+                    <div class="w-full h-56 rounded bg-gray-100 overflow-hidden">
+                        <iframe src="https://www.google.com/maps/d/embed?mid=1234567890EXAMPLE_MID" width="100%" height="100%" style="border:0;"></iframe>
                     </div>
                 </div>
 
-                <!-- Mapa 1x10 - B -->
-                <div class="p-2 border border-gray-200 rounded-lg bg-gray-50">
-                    <div class="w-full h-[250px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_1X10_2" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                <!-- Visor 2 -->
+                <div class="card-custom p-3">
+                    <span class="inline-block bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded font-semibold mb-2">Riesgo Medio</span>
+                    <h3 class="text-sm font-bold text-slate-800 mb-2">Sector / Parroquia B</h3>
+                    <div class="w-full h-56 rounded bg-gray-100 overflow-hidden">
+                        <iframe src="https://www.google.com/maps/d/embed?mid=1234567890EXAMPLE_MID" width="100%" height="100%" style="border:0;"></iframe>
                     </div>
                 </div>
 
-                <!-- Mapa 1x10 - C -->
-                <div class="p-2 border border-gray-200 rounded-lg bg-gray-50">
-                    <div class="w-full h-[250px] rounded overflow-hidden bg-gray-200">
-                        <iframe src="https://www.google.com/maps/d/embed?mid=TU_ID_MAPA_1X10_3" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                <!-- Visor 3 -->
+                <div class="card-custom p-3">
+                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded font-semibold mb-2">Habitable / Controlado</span>
+                    <h3 class="text-sm font-bold text-slate-800 mb-2">Sector / Parroquia C</h3>
+                    <div class="w-full h-56 rounded bg-gray-100 overflow-hidden">
+                        <iframe src="https://www.google.com/maps/d/embed?mid=1234567890EXAMPLE_MID" width="100%" height="100%" style="border:0;"></iframe>
                     </div>
                 </div>
             </div>
@@ -208,18 +173,59 @@
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm">
-        <p class="font-bold text-slate-300">ALCALDÍA DE CARACAS | GEO RENACER</p>
-        <p>Panel Ejecutivo de Priorización y Análisis de Datos Institucionales.</p>
+    <!-- 6. PIE DE PÁGINA (FOOTER) -->
+    <footer class="bg-slate-950 text-slate-400 py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs space-y-2">
+            <p class="font-semibold text-slate-300">GEO RENACER CARACAS — Sistema de Información Territorial y Gestión de Riesgo</p>
+            <p>© 2026 Todos los derechos reservados. Alcaldía de Caracas.</p>
+        </div>
     </footer>
 
-    <!-- SCRIPT DE INICIALIZACIÓN -->
+    <!-- LÓGICA DE GRÁFICOS (Chart.js) -->
     <script>
-        // Aquí puedes incluir la lógica de PapaParse que utilizamos para leer los archivos
-        // 'Renacer.xlsx', 'habitable.xlsx' o sus versiones exportadas a CSV que alimentan
-        // la tabla dinámica del bloque RENACER.
-        console.log("Sistema Geo Renacer Inicializado Correctamente.");
+        // 1. Gráfico de Dona: Servicios Básicos
+        const ctxServicios = document.getElementById('chartServicios').getContext('2d');
+        new Chart(ctxServicios, {
+            type: 'doughnut',
+            data: {
+                labels: ['Electricidad', 'Agua', 'Gas', 'Telefonía'],
+                datasets: [{
+                    data: [81.7, 70.0, 52.8, 100.0],
+                    backgroundColor: ['#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 2. Gráfico de Barras: Demolición
+        const ctxDemolicion = document.getElementById('chartDemolicion').getContext('2d');
+        new Chart(ctxDemolicion, {
+            type: 'bar',
+            data: {
+                labels: ['P. Sucre', '23 de Enero', 'El Valle', 'Antímano'],
+                datasets: [{
+                    label: 'Obras de Demolición',
+                    data: [450, 320, 210, 406],
+                    backgroundColor: '#ef4444'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 3. Gráfico de Barras: Reconstrucción (Grafica separada)
+        const ctxReconstruccion = document.getElementById('chartReconstruccion').getContext('2d');
+        new Chart(ctxReconstruccion, {
+            type: 'bar',
+            data: {
+                labels: ['P. Sucre', '23 de Enero', 'El Valle', 'Antímano'],
+                datasets: [{
+                    label: 'Obras de Reconstrucción',
+                    data: [310, 280, 190, 222],
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
     </script>
 </body>
 </html>
